@@ -1,0 +1,11 @@
+auto
+**.aux
+**.log
+**.lot
+**.nav
+**.toc
+**.out
+**.snm
+/lectures/lecture-beamer.pdf
+/lectures/lecture-handout.pdf
+/lectures/lecture.pdf

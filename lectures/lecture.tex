@@ -1,0 +1,153 @@
+\usepackage{hyperref}
+%\usepackage{media9}
+%\usepackage{movie15}
+\usepackage{amsmath,amssymb,calc}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{multirow,booktabs,subcaption}
+\usepackage{stmaryrd}
+\captionsetup{compatibility=false}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,frenchb]{babel}
+
+\usepackage{multibib}
+\newcites{pub}{Publications}
+\newcites{other}{Other references}
+
+% \usepackage{listings}
+% \lstset{basicstyle=\ttfamily,
+%   showstringspaces=false,
+%   commentstyle=\color{red},
+%   keywordstyle=\color{blue}
+% }
+
+%% listings package
+\usepackage{filecontents,listings,lstautogobble}
+\lstset{language=c++,showspaces=false,showstringspaces=false,captionpos=t,literate={>>}{\ensuremath{>>}}1,mathescape,autogobble=true}
+\lstset{basicstyle=\small\bf\ttfamily}
+\lstset{lineskip=-2pt}
+\definecolor{lbcolor}{rgb}{0.95,0.95,0.95}
+\definecolor{cblue}{rgb}{0.,0.0,0.6}
+\definecolor{cgreen}{rgb}{0.,0.6,0.0}
+\definecolor{violet}{rgb}{0.5,0,0.5}
+\definecolor{vertfonce}{rgb}{0.,0.5,0.}
+\definecolor{rouge}{rgb}{0.5,0.,0.}
+\definecolor{blue}{rgb}{0.,0.,1}
+\definecolor{orange}{rgb}{1,0.5,0}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{
+  emph={form,form1,form2,integrate,on,grad,gradt,dot,id,dx,dy,dz,idt,dxt,dyt,dzt,idv,dxv,dy,dzv,gradv,div,divt,divv,dn,jump,trans,vec,cst,
+    project,P,Px,Py,Pz,one,oneX,oneY,oneZ,hFace,N,Nx,Ny,Nz,sin,cos,min,max,abs,pow,chi,exp,LinearForm,BilinearForm,MixedLinearForm,MixedBilinearForm,
+    FESpace,MixedFESpace,integrate,project,addCL},emphstyle=\color{blue},
+  emph={[2]\_space,\_range,\_expr,\_quad,\_quad1,\_test,\_trial,\_matrix,\_vector,\_solution,\_element,\_rhs,\_rowstart,\_colstart,\_block,
+    \_pattern,\_pattern\_block,\_domainSpace,\_imageSpace,\_mesh,\_name,\_partitions,\_worldcomm,\_worldscomm,
+    \_type,\_marker1,\_marker2,\_marker3,\_marker4,\_marker5,\_marker6,\_marker7,\_marker8,\_markerAll,\_argc,\_argv,\_desc},emphstyle={[2]\color{violet}\bfseries},
+  emph={[3]elements,markerName,boundaryfaces,markedfaces,\_Q,solve, newMatrix,newVector,newZeroMatrix,newZeroVector,
+    newBlockMatrix,newBlockVector,localize,element,apply,createMesh,localSize,subWorldComm,transpose,setMarker,add,save,
+    dirichlet\_vec,neumann\_scal,updateTime,exportResults,updateBdf,init,FluidMechanics}, emphstyle={[3]\color{rouge}\bfseries},
+  emph={[4]Backend,BlocksVector,BlocksSparseMatrix,BlocksStencilPattern,Blocks,opInterpolation,FunctionSpace,Lagrange,RaviartThomas,Nedelec,bases,Pch,unitSquare,WorldComm,
+    Mesh,Simplex,Node,Rectangle,Quadrangle,Circle,AppliManagement,Environment,feel\_options,exporter},emphstyle={[4]\color{orange}\bfseries},
+  emph={[5]size\_type,uint16\_type},emphstyle={[5]\color{red}\bfseries},
+  emph={[6]GeoTool,vf,cl},emphstyle={[6]\color{cyan}\bfseries}
+}
+
+\lstset{numberstyle=\tiny}
+\lstset{backgroundcolor=\color{white},rulecolor=}
+\definecolor{lightgrey}{RGB}{160,160,160}
+\lstset{commentstyle=\ttfamily\color{lightgrey}}
+
+\useoutertheme{infolines}
+
+% ******** Colors ******************
+\definecolor{LightGray}{RGB}{150,150,150}
+\definecolor{RedAlert}{RGB}{165,9,9}
+\definecolor{MidnightBlue}{RGB}{25,25,112}
+\definecolor{DarkBlue}{RGB}{72,61,139}
+\definecolor{Purple}{RGB}{128,0,128}
+\colorlet{DarkPurple}{Purple!80!black}
+
+\definecolor{s1}{RGB}{228,26,28}
+\definecolor{s2}{RGB}{55,126,184}
+\definecolor{s3}{RGB}{77,175,74}
+\definecolor{s4}{RGB}{152,78,163}
+\definecolor{s5}{RGB}{255,127,0}
+\definecolor{s6}{RGB}{166,86,40}
+\definecolor{s7}{RGB}{247,129,191}
+\definecolor{s8}{RGB}{153,153,153}
+\definecolor{s9}{RGB}{255,255,51}
+
+\definecolor{ljk}{rgb}{0.50, 0.625, 0.70}
+
+\usetheme{metropolis}
+
+% %------------------------------------------------------------------------------
+% % tikz
+% %------------------------------------------------------------------------------
+\usepackage{tikz}
+% tikz library
+\usetikzlibrary{backgrounds,shapes,calc,snakes,arrows,fit,shadows,arrows,positioning,decorations.text,mindmap}
+%\usetikzlibrary{calc,arrows,arrows.meta,patterns,plotmarks,shapes,snakes,er,3d,automata,backgrounds,topaths,trees,petri,mindmap,backgrounds,fit}
+\usepgflibrary{decorations.markings}
+\usepgfplotslibrary{fillbetween}
+\tikzset{concept/.append style={fill={none}}}
+
+
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{cancel}
+\usepackage[labelformat=empty,font=footnotesize,skip=1pt]{caption}
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+\makeatletter
+\renewcommand{\ALG@beginalgorithmic}{\small}
+\makeatother
+\algrenewcommand\algorithmicindent{0.5em}
+\algnewcommand\And{\textbf{ and }}
+\algnewcommand\Or{\textbf{ or }}
+\algnewcommand\To{\textbf{ to }}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+
+\begin{document}
+
+% **************** TITLE ***********************
+
+\title[Feel++]{Solving PDEs with Feel++}
+\subtitle[]{}
+
+\author[]{V. Chabannes, G. Dolle, C. Prud'homme}
+
+\titlegraphic{
+  \includegraphics[height=0.85cm]{figures/logos/logoCemosisTransparent.png} \hspace*{1cm}
+  \includegraphics[height=0.85cm]{figures/logos/logoIRMA.png} \hspace*{1cm}
+  \includegraphics[height=0.85cm]{figures/logos/logoCNRS_UDSThesis.pdf} \hspace*{1cm}
+  \includegraphics[height=0.85cm]{figures/logos/logoUDS_UDSThesis.pdf}
+}
+
+\date[January 25, 2017]{}
+% ***********************************************
+
+\begin{frame}
+\titlepage
+\end{frame}
+\begin{frame}
+\tableofcontents
+\end{frame}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "lecture-beamer"
+%%% End:
