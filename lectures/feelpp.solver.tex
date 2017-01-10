@@ -1,0 +1,653 @@
+\section{Solver and Preconditioner Framework}
+
+\subsection{Preconditioning}
+\begin{frame}{Preconditioning}
+  A preconditioned iterative solver solves the system
+  \begin{equation}
+    M^{-1} A x = M^{-1}b .
+  \end{equation}
+
+The matrix $M$ is called the preconditioner.
+The preconditioner should satisfy certain requirements:
+\begin{itemize}
+\item Convergence should be much faster for the preconditioned
+system than for the original system. Normally this means
+that M is constructed as an easily invertible approximation
+to $A$. Note that if $M = A$ any iterative method converges in
+one iteration.
+\item Operations with $M^{-1}$ should be easy to perform (``cheap'').
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Preconditioning}
+  Of course the matrix $M^{-1}A$ is not explicitly formed. The
+multiplication $u = M^{-1}Av$ can simply be carried out by the
+operations
+\begin{equation*}
+t = Av; u = M^{-1}t
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}{Preconditioning}
+  Preconditioners can be applied in different ways:
+  From the left
+  \begin{equation*}
+    M^{-1}Ax = M^{-1}b ,
+  \end{equation*}
+
+  centrally
+  \begin{equation*}
+M = LU; L^{-1}AU^{-1}y = L^{-1}b; x = U^{-1}y ,
+  \end{equation*}
+
+  or from the right
+  \begin{equation*}
+    AM^{-1}y = b; x = M^{-1}y .
+  \end{equation*}
+
+\end{frame}
+
+\begin{frame}
+  Left, right and central preconditioning gives the same spectrum.
+  Yet there are other differences:
+  \begin{itemize}
+  \item  Left preconditioning is most natural: no extra step is
+required to compute $x$;
+\item Central preconditioning preserves symmetry;
+\item Right preconditioning does not affect the residual norm
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why preconditioning?}
+  \begin{figure}[h]
+    \centering
+  \includegraphics[width=.8\linewidth]{figures/iter1.png}
+    \caption{Iteration 1}
+    \label{fig:1}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}{Why preconditioning?}
+  \begin{figure}[h]
+    \centering
+  \includegraphics[width=.8\linewidth]{figures/iter2.png}
+    \caption{Iteration 7}
+    \label{fig:2}
+  \end{figure}
+
+\end{frame}
+\begin{frame}{Why preconditioning?}
+  \begin{figure}[h]
+    \centering
+  \includegraphics[width=.8\linewidth]{figures/iter3.png}
+    \caption{Iteration 21}
+    \label{fig:3}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Why preconditioning?}
+  From the previous pictures it is clear that we need
+$O(1/h) = O(\sqrt{n})$ iterations to move information from one end to
+the other end of the grid.
+
+So at best it takes $O(n^{3/2})$ operations to compute the solution
+with an iterative method.
+
+In order to improve this we need a preconditioner that enables
+fast propagation of information through the mesh.
+\end{frame}
+\subsection{Basic Preconditioners}
+\begin{frame}{Diagonal scaling}
+  Diagonal scaling or Jacobi preconditioning uses
+  \begin{equation*}
+    M = \textrm{diag}(A)
+  \end{equation*}
+
+as preconditioner. Clearly, this preconditioner does not enable
+fast propagation through a grid. On the other hand, operations
+with $\textrm{diag}(A)$ are very easy to perform and diagonal scaling can
+be useful as a first step, in combination with other techniques.
+
+\end{frame}
+
+\begin{frame}{Gauss-Seidel, SOR, SSOR}
+  The Gauss-Seidel preconditioner is defined by
+  \begin{equation*}
+    M = L + D
+  \end{equation*}
+
+in which $L$ is the strictly lower-triangular part of $A$ and
+$D = \textrm{diag}(A)$. By introducing a relaxation parameter, we get the
+  SOR-preconditioner.
+
+For symmetric problems it is wise to take a symmetric
+preconditioner. A symmetric variant of Gauss-Seidel is defined
+by
+\begin{equation*}
+M = (L + D)D^{-1}(L + D)^T
+\end{equation*}
+
+By introducing a relaxation parameter we get the so called
+SSOR-preconditioner.
+\end{frame}
+
+\begin{frame}{ILU Preconditioners}
+  ILU-preconditioners are the most popular \emph{black box}
+preconditioners. They are constructed by making a standard
+LU-decomposition
+\begin{equation*}
+A = LU
+\end{equation*}
+
+However, during the elimination process some nonzero entries in
+the factors are discarded. This can be done on basis of two
+criteria:
+\begin{itemize}
+\item Sparsity pattern: e.g. an entry in a factor is only kept if it
+corresponds to a nonzero entry in $A$;
+\item Size: small entries in the decomposition are dropped.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ILU Preconditioners}
+  The number of nonzero entries that is maintained in the
+$LU$-factors is normally of the order of the number of nonzeros in
+$A$.
+
+This means that operations with the $LU$-preconditioner are
+approximately as costly as multiplications with $A$.
+
+For A Symmetric Positive Definite a special variant of ILU exists,
+called Incomplete Choleski. This preconditioner is based on the
+Choleski decomposition $A = CC^T$ .
+\end{frame}
+
+\begin{frame}{Basic preconditioners}
+  Although the preconditioners discussed before can considerably
+reduce the number of iterations, they do not normally reduce the
+mesh-dependency of the number of iterations.
+
+In the next slides we take a closer look at how basic iterative
+methods reduce the error. From the observations we make, we
+will develop the idea that is at the basis of one of the fastest
+techniques: multigrid.
+\end{frame}
+
+\begin{frame}{Smoothing}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/jacobi_errini.png}
+    \caption{Random initial error}
+    \label{fig:2}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Smoothing}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/jacobi_err1.png}
+    \caption{Error after 1 Jacobi ieration}
+    \label{fig:3}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Smoothing}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/jacobi_err2.png}
+    \caption{Error after 2 Jacobi ieration}
+    \label{fig:4}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Smoothing}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/jacobi_err3.png}
+    \caption{Error after 3 Jacobi ieration}
+    \label{fig:5}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Complementarity}
+  \begin{itemize}
+  \item  Error after a few weighted Jacobi iterations has structure,
+this is the same for the other basic iterative methods.
+\item Instead of discarding the method, look to complement its
+failings
+
+  \end{itemize}
+How can we best correct errors that are slowly reduced by basic
+iterative method?
+\only<2->{
+\begin{itemize}
+\item Slow-to-converge errors are smooth
+\item Smooth vectors can be accurately represented using fewer
+degrees of freedom
+\end{itemize}}
+\end{frame}
+
+
+\begin{frame}{Coarse Grid Correction}
+  Smooth vectors can be accurately represented using fewer
+  degrees of freedom
+  \begin{itemize}
+  \item Idea: transfer job of resolving smooth components to a
+coarser grid version of the problem
+\item Need:
+  \begin{itemize}
+    \item Complementary process for resolving smooth
+components of the error on the coarse grid
+\item Way to combine the results of the two processes
+
+  \end{itemize}
+
+  \end{itemize}
+\end{frame}
+\subsection{Multigrid preconditioners}
+\begin{frame}{Multigrid}
+  Relaxation is the name for applying one or a few basic
+  iteration steps.
+  \begin{itemize}
+  \item Idea is to correct the approximation after relaxation, $x^{(1)}$,
+from a coarse-grid version of the problem
+\item Need interpolation map, $P$, from coarse grid to fine grid
+\item Corrected approximation will be $x^{(2)} = x^{(1)} + Px_c$
+\item $x_c$ is the solution of the coarse-grid problem and satisfies
+  \begin{equation*}
+    (P^T A P)x_c = P^T A(x - x^{(1)}) = P^T r^{(1)}
+  \end{equation*}
+
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Two-grid cycle}
+  Components
+  \begin{itemize}
+  \item Relaxation Relax: $x^{(1)}= x^{(0)}+M^{-1}r^{(0)}$
+    \only<2>{\begin{itemize}
+    \item Use a smoothing process (such as Jacobi or Gauss-Seidel)
+      to eliminate oscillatory errors
+    \item Remaining error satisfies $Ae^{(1)} = r^{(1)} = b - Ax^{(1)}$
+    \end{itemize}}
+\item<3-> Restriction
+  \only<3>{\begin{itemize}
+    \item Transfer residual to coarse grid
+      \item Compute $P^T r^{(1)}$
+    \end{itemize}
+  }
+  \item<4-> Coarse Grid Correction : Solve: $P^T A P x_c= P^T r^{(1)}$
+  \only<4>{\begin{itemize}
+    \item Use coarse-grid correction to eliminate smooth errors
+    \item Best correction $x_c$ satisfies
+      \begin{equation*}
+        P^T A P x_c = P^T r^{(1)}
+      \end{equation*}
+    \end{itemize}
+  }
+\item<5-> Interpolation : Solve: $P^T A P x_c= P^T r^{(1)}$
+  \only<5>{\begin{itemize}
+    \item Transfer correction to fine grid
+    \item Compute $x^{(2)} = x^{(1)} + P x_c$
+    \end{itemize}
+  }
+  \item<6-> Relaxation
+  \only<6>{\begin{itemize}
+    \item Relax once again to remove oscillatory error introduced in
+coarse-grid correction
+    \end{itemize}
+  }
+  \end{itemize}
+
+  \uncover<7>{Be careful with solution of coarse-grid problem !}
+  \uncover<8>{Use Recursion ! apply same methodology to solve coarse
+    grid problem -> V-Cycle}
+
+\end{frame}
+
+\begin{frame}
+\includegraphics[width=.8\linewidth]{figures/vcycle.png}
+\end{frame}
+
+\begin{frame}{Properties of Effective Cycles}
+  \begin{itemize}
+  \item   Fast convergence
+    \begin{itemize}
+    \item  Effective reduction of all error components
+      \item  On each level, coarse-grid correction must effectively
+reduce exactly those errors that are slow to be reduced
+by relaxation alone
+\item Hierarchy of coarse-grid operators resolves relevant
+physics at each scale
+
+    \end{itemize}
+  \item Low iteration cost
+    \begin{itemize}
+    \item \item Simple relaxation scheme (cheap computation of $M^{-1}r$
+on all levels)
+\item Sparse coarse-grid operators
+\item Sparse interpolation/restriction operations
+
+    \end{itemize}
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Choosing coarse grids}
+  \begin{itemize}
+  \item   No best strategy to choose coarse grids
+  \item Operator dependent, but also machine dependent
+
+    \includegraphics[width=.7\linewidth]{figures/coarsergrid.png}
+
+\item For structured meshes, often use uniform de-refinement
+approach
+\item For unstructured meshes, various weighted independent set
+algorithms are often used.
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What is still missing ?}
+  \begin{itemize}
+  \item   How do we choose P?
+    \begin{itemize}
+    \item Number of columns
+    \item Sparsity structure
+    \item Non-zero values
+    \end{itemize}
+
+ \item Choices depend closely on the properties of the relaxation
+method
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Some remarks on multigrid}
+  Multigrid works well if the problem
+  \begin{itemize}
+  \item  is grid-based. However, matrix-based multigrid methods
+(\emph{Algebraic Multigrid}) do exist and are often successful;
+\item has a smooth solution. An underlying assumption is that the
+solution can be represented on a coarser grid. Multigrid
+works particularly well for Poisson-type problems. For these
+problems the number of operations is $O(n).$
+
+  \end{itemize}
+
+Multigrid can be used as a separate solver, but is often used as
+a preconditioner for a Krylov-type method.
+\end{frame}
+
+\subsection{Domain decomposition preconditioners}
+\begin{frame}{Domain decomposition preconditioners}
+  A standard way to parallelise a grid-based computation is to split
+the domain into $p$ subdomains, and to map each subdomain on a
+processor.
+
+It is a natural idea to solve the subdomain problems
+independently and to iterate to correct for the error.
+This idea has given rise to the family of domain decomposition
+preconditioners.
+
+The theory for domain decomposition preconditioners is vast,
+here we only discuss some important ideas.
+\end{frame}
+
+\begin{frame}{Domain Decomposition}
+  \includegraphics[width=.8\linewidth]{ddm}
+\end{frame}
+
+\begin{frame}{Domain Decomposition}
+  The domain decomposition decomposes the system $Ax = b$ into
+  blocks. For two subdomains one obtains
+  \begin{equation*}
+A =
+\begin{pmatrix}
+  A_{11} & A_{12}\\
+  A_{21} & A_{22}
+\end{pmatrix}
+\begin{pmatrix}
+  x_1\\
+  x_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+  b_1\\
+  b_2
+\end{pmatrix}
+\end{equation*}
+$x_1$ and $x_2$ represent the subdomain unknowns, $A_{11}$ and $A_{22}$ the
+subdomain discretization matrices and $A_{12}$ and $A_{21}$ the coupling
+matrices between subdomains.
+\end{frame}
+
+\begin{frame}{Domain Decomposition Preconditioners}
+
+It is a natural idea to solve a linear system $Ax = b$ by solving the
+subdomain problems independently and to iterate to correct for
+the error.
+
+This idea has given rise to the family of domain decomposition
+preconditioners.
+
+The theory for domain decomposition preconditioners is vast,
+here we only discuss some important ideas.
+
+\end{frame}
+
+\begin{frame}{Block Jacobi Preconditioners}
+  A simple domain decomposition preconditioner is defined by
+  \begin{equation*}
+    M=
+    \begin{pmatrix}
+      A_{11}&0\\
+      0 & A_{22}
+    \end{pmatrix}\mbox{(Block-Jacobi preconditioner).}
+  \end{equation*}
+  or, in general by
+  \begin{equation*}
+    M=
+    \begin{pmatrix}
+      A_{11}&&\\
+      &\ddots&\\
+      &&A_{MM}
+    \end{pmatrix}
+
+  \end{equation*}
+The subdomain systems can be solved in parallel.
+\end{frame}
+
+\begin{frame}{Solution of the Subdomain Problems}
+
+  There are several ways to solve the subdomain problems:
+  \begin{itemize}
+  \item  Exact solves. This is in general (too) expensive.
+\item Inexact solves using an incomplete decomposition
+(block-ILU).
+\item Inexact solves using an iterative method to solve the
+subproblems. Since in this case the preconditioner is
+variable, the outer iteration should be flexible, for example
+GCR.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{On the Scalability of Block-Jacobi}
+  Without special techniques, the number of iterations increases
+  with the number of subdomains. The algorithm is not scalable.
+
+To overcome this problem, techniques can be applied to enable
+the exchange of information between subdomains.
+\end{frame}
+
+\begin{frame}{Improving the Scalabiliy}
+  Two popular techniques that improve the flow of information are:
+  \begin{itemize}
+  \item Use an overlap between subdomains. Of course one has to
+ensure that the value of unknowns in gridpoints that belong
+to multiple domains is unique.
+\item Use a coarse grid correction. The solution of the coarse grid
+problem is added to the subdomain solutions.
+This idea is closely related to multigrid, since the coarse-grid
+solution is the non-local, smooth part of the error that cannot
+be represented on a single subdomain.
+
+  \end{itemize}
+
+
+\end{frame}
+\subsection{KKT or saddle point systems}
+\begin{frame}{KKT or saddle point systems}
+  KKT systems frequently arise in optimisation. KKT systems are
+also know as saddle-point systems. A KKT system has the
+following block structure
+\begin{equation*}
+  A=
+  \begin{pmatrix}
+    A & B^T\\
+    B & -C
+  \end{pmatrix}
+
+\end{equation*}
+
+with $F$ and $C$ symmetric pos. def matrices.
+Systems with such a matrix arise in many other applications, for
+example in CFD (Stokes problem) and in structural engineering.
+\end{frame}
+
+\begin{frame}{Preconditioning a KKT-system}
+  Many preconditonres have been developed that make use of the
+  fact that of the system matrix
+  \begin{equation*}
+    A=
+    \begin{pmatrix}
+      F & B^T\\
+      B & -C
+    \end{pmatrix}
+
+  \end{equation*}
+  a block LU decomposition can be made:
+  \begin{equation*}
+    \begin{pmatrix}
+F & B^T\\
+B & -C
+\end{pmatrix} =
+\begin{pmatrix}
+I& O^T\\
+BF^{-1} & I\\
+\end{pmatrix}
+\begin{pmatrix}
+F & B^T\\
+O & -M_S
+\end{pmatrix}
+  \end{equation*}
+Here $M_S = BF^{-1}B^T + C$ is the Schur complement.
+\end{frame}
+
+\begin{frame}{Preconditioning a KKT-system}
+  Idea (e.g. Elman, Silvester, Wathen): take
+  \begin{equation*}
+    P =
+    \begin{pmatrix}
+F & B^T\\
+O &-M_S
+    \end{pmatrix}
+  \end{equation*}
+  as (right) preconditioner:
+  \begin{equation*}
+    AP^{-1} =
+    \begin{pmatrix}
+I & O^T\\
+BF^{-1} & I
+    \end{pmatrix}
+  \end{equation*}
+  has only eigenvalue 1: GMRES ready in 2 iterations. \textbf{BUT}
+  \begin{itemize}
+  \item  Preconditioner is nonsymmetric
+\item Schur complement is too expensive to compute and has to
+be approximated
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Preconditioning a KKT-system}
+  An SPD block-diagonal preconditioner:
+  \begin{equation*}
+    P=
+    \begin{pmatrix}
+F & O^T\\
+O & M_S
+    \end{pmatrix}
+  \end{equation*}
+Can be used with \textsc{MINRES} (short recurrences)
+Preconditioned matrix has three distinct eigenvalues!
+
+\textsc{MINRES} needs three iterations.
+
+The main question is again how to make a cheap approximation
+to the Schur complement.
+\end{frame}
+
+\begin{frame}{Concluding remarks}
+  Preconditioners are the key to a successful iterative method.
+
+
+Today we saw some of the most important preconditioners. The
+best preconditioner, however, depends completely on the
+problem.
+\end{frame}
+
+%\lecture[2]{Domain Decomposition methods}
+
+\section{Domain Decomposition Methods}
+
+\begin{frame}{Table of contents}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+\subsection{Introduction}
+\begin{frame}{Motivations}
+  \begin{itemize}
+  \item DD can be used in the framework of any discretization method for
+PDEs (FEM, FV, FD, SEM) to make their algebraic solution more
+efficient on parallel computer platforms
+\item DDM allow the reformulation of a boundary-value problem on a
+partition of the computational domain into subdomains
+! very convenient framework for the solution of heterogeneous or
+multiphysics problems, i.e. those that are governed by differential
+equations of different kinds in different subregions of the
+computational domain.
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Idea}
+  By DDM methods the computational domain # where the bvp is set is
+subdivided into two or more subdomains on which discretized problems of
+smaller dimension are to be solved.
+Parallel solution algorithms may be used.
+There are two ways of subdividing the computational domain:
+\begin{itemize}
+\item with disjoint subdomains
+\item with overlapping subdomains
+\end{itemize}
+\includegraphics[width=.7\linewidth]{figures/ddmidea.png}
+Correspondingly, different DD algorithms will be set up.
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Examples}
+%   \includegraphics[width=.9\linewidth]{ddm.png}
+% \end{frame}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "lecture.feelpp.slides"
+%%% End:

@@ -6,6 +6,10 @@ auto
 **.toc
 **.out
 **.snm
+**.fls
+**.fdb_latexmk
 /lectures/lecture-beamer.pdf
 /lectures/lecture-handout.pdf
 /lectures/lecture.pdf
+
+/lectures/lecture.feelpp.handout.pdf

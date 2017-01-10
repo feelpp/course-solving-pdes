@@ -8,7 +8,7 @@
 \usepackage{stmaryrd}
 \captionsetup{compatibility=false}
 \usepackage[utf8x]{inputenc}
-\usepackage[english,frenchb]{babel}
+\usepackage[english]{babel}
 
 \usepackage{multibib}
 \newcites{pub}{Publications}
@@ -109,6 +109,24 @@
 \algnewcommand\Or{\textbf{ or }}
 \algnewcommand\To{\textbf{ to }}
 
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\opspan}{span}
+\DeclareMathOperator*{\opdim}{dim}
+\usepackage{accents}
+
+\newcommand\munderbar[1]{%
+  \underaccent{\bar}{#1}}
+\usepackage{booktabs}
+
+\everymath{\displaystyle}
+
+\usepackage[final]{pdfpages}
+%\includeonlylecture{l1}
+%\includeonlylecture{l2}
+%\includeonlylecture{l3}
+%\includeonlylecture{l4}
+%\includeonlylecture{l5}
+
 \AtBeginSection[]
 {
   \begin{frame}
@@ -116,36 +134,9 @@
   \end{frame}
 }
 
+\AtBeginLecture{\frame{\Large Lecture: \insertlecture}}
 
-
-\begin{document}
-
-% **************** TITLE ***********************
-
-\title[Feel++]{Solving PDEs with Feel++}
-\subtitle[]{}
-
-\author[]{V. Chabannes, G. Dolle, C. Prud'homme}
-
-\titlegraphic{
-  \includegraphics[height=0.85cm]{figures/logos/logoCemosisTransparent.png} \hspace*{1cm}
-  \includegraphics[height=0.85cm]{figures/logos/logoIRMA.png} \hspace*{1cm}
-  \includegraphics[height=0.85cm]{figures/logos/logoCNRS_UDSThesis.pdf} \hspace*{1cm}
-  \includegraphics[height=0.85cm]{figures/logos/logoUDS_UDSThesis.pdf}
-}
-
-\date[January 25, 2017]{}
-% ***********************************************
-
-\begin{frame}
-\titlepage
-\end{frame}
-\begin{frame}
-\tableofcontents
-\end{frame}
-
-
-\end{document}
+\AtBeginPart{\frame{\partpage}}
 
 %%% Local Variables:
 %%% mode: latex

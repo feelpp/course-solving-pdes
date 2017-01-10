@@ -1,19 +1,19 @@
 .SUFFIXES: .tex .pdf
 FIGDIR= figures
 
-SLIDES= lecture-slides.pdf \
-        lecture-handout.pdf
+SLIDES= lecture.feelpp.slides.pdf \
+        lecture.feelpp.handout.pdf
 
 all: ${SLIDES}
 
 
-lecture-slides.pdf:
-lecture-handout.pdf:
+lecture.feelpp.slides.pdf:
+lecture.feelpp.handout.pdf:
 
-%-handout.pdf : %-handout.tex %.tex
+%.handout.pdf : %.handout.tex %.tex
 	latexmk -pdf $<
 
-%-slides.pdf : %-slides.tex %.tex
+%.slides.pdf : %.slides.tex %.tex
 	latexmk -pdf $<
 
 clean:
