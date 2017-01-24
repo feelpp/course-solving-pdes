@@ -1,4 +1,9 @@
 \usepackage{hyperref}
+%\usepackage{fontspec}
+\usepackage{fontawesome}
+\usepackage{setspace}
+\usepackage{graphicx}
+
 %\usepackage{media9}
 %\usepackage{movie15}
 \usepackage{amsmath,amssymb,calc}
@@ -7,12 +12,34 @@
 \usepackage{multirow,booktabs,subcaption}
 \usepackage{stmaryrd}
 \captionsetup{compatibility=false}
-\usepackage[utf8x]{inputenc}
+% do not load if xelatex is used
+%\usepackage[utf8x]{inputenc}
 \usepackage[english]{babel}
 
 \usepackage{multibib}
 \newcites{pub}{Publications}
 \newcites{other}{Other references}
+
+\usepackage{minted}
+\usepackage{amsmath,amssymb,bm}
+% \usemintedstyle{trac}
+\usemintedstyle{colorful}
+
+\newminted{cpp}{%fontsize=\scriptsize,
+  linenos,
+  numbersep=8pt,
+  gobble=4,
+  frame=lines,
+  bgcolor=lbcolor,
+  framesep=3mm}
+
+\newminted{bash}{%fontsize=\scriptsize,
+  linenos,
+  numbersep=8pt,
+  gobble=4,
+  frame=lines,
+  bgcolor=lbcolor,
+  framesep=3mm}
 
 % \usepackage{listings}
 % \lstset{basicstyle=\ttfamily,
@@ -91,6 +118,7 @@
 \usepgfplotslibrary{fillbetween}
 \tikzset{concept/.append style={fill={none}}}
 
+\input{lecture.tikz}
 
 \usepackage[plain]{algorithm}
 \usepackage{algpseudocode}
@@ -100,6 +128,12 @@
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
+\usepackage{xspace}
+\newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.25ex}{\smaller{\smaller\textbf{+}}}}
+
+\newcommand{\feel}{\mbox{Feel++}\xspace}
+\newcommand{\feelpp}{\feel}
+
 
 \makeatletter
 \renewcommand{\ALG@beginalgorithmic}{\small}

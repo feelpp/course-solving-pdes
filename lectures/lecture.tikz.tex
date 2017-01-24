@@ -1,0 +1,44 @@
+\usepackage{pgfkeys}
+\usepackage[skins]{tcolorbox}
+\tcbuselibrary{minted}
+\tcbset{listing engine=minted}
+
+\makeatletter
+\pgfkeys{/feelpp/.cd,
+  image/.initial=,
+  image width/.initial=5cm,
+  text/.initial=,
+  text color/.initial=white,
+  shape/.initial=circle,
+}
+\def\feelppset#1{\pgfkeys{/feelpp/.cd,#1}}
+\def\feelppget#1{\pgfkeysvalueof{/feelpp/#1}}
+
+
+\newcommand{\clipimg}[1]{
+  %\bgroup
+  \feelppset{#1}%%
+  %\feelppget{image width}
+  %\feelppget{image}
+  %\feelppget{text}
+  \begin{tikzpicture}[radius=10cm]
+    % \node[circle,draw,inner sep = \feelppget{image width},
+    % text=\feelppget{text color},
+    %    path picture={
+    %      \node at (path picture bounding box.center){
+    %        %\includegraphics[width=\feelppget{image width}]{\feelppget{image}}
+    %        \includegraphics[]{\feelppget{image}}
+    %      };
+    %      }]{\feelppget{text}};
+    %\node[circle,draw,inner sep=2cm,fill overzoom
+    %image=\feelppget{image}] (A) {};
+    \node[\feelppget{shape},draw, inner sep=\feelppget{image width},fill stretch image=\feelppget{image}] (A) {\feelppget{text}};
+
+  \end{tikzpicture}
+  %\egroup
+}
+\makeatother
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "lecture-beamer"
+%%% End:

@@ -2,6 +2,749 @@
 \begin{frame}{Programming is easy}
 
 \end{frame}
+
+
+\section{Programming and Execution Environment}
+
+
+\begin{frame}{Programming environment}
+  \begin{itemize}
+  \item Use CDash
+    \centerline{\href{http://my.cdash.org/index.php?project=Feel\%2B\%2B&display=project}{CDash
+        Feel++ Web Page}}
+  \item  Use Travis (see \texttt{.travis.yml}) for Feel++ as well as
+    private projects
+    \centerline{\href{https://travis-ci.org/feelpp/feelpp}{Travis
+        Feel++ Web Page}}
+  \item Use DDT/Map/Performance Reports
+    \centerline{\url{https://github.com/feelpp/feelpp/wiki/ddt-map}}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Programming environment:Embracing C++11 standard }
+    \mintinline{c++}{auto} keyword and its dual
+    \mintinline{c++}{decltype}
+    \begin{cppcode}
+      auto mesh = loadMesh(_mesh=new Mesh<Simplex<2>>);
+      auto Xh = Pch<3>( mesh );
+      auto u = Xh->element();
+      auto a = form2(_test=Xh,_trial=Xh);
+      auto l = form1(_test=Xh);
+      auto e = exporter(_mesh=mesh);
+      Pch_ptrtype<decltype(mesh),2> Vh=Pch<2>(mesh);
+    \end{cppcode}
+\end{frame}
+
+\begin{frame}[fragile]{Programming environment:Embracing C++11 standard }
+
+    \mintinline{c++}{lambda} functions
+
+      \begin{minted}[]{c++}
+        auto f = [=]( element_type& p ){
+          p.on(_range=elements(mesh),_expr=cst(1.)); }
+        auto u = Xh->element();
+        f( u );
+      \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Programming environment:Embracing C++11 standard}
+    Constructor delegation (see \mintinline{c++}{Environment} class)
+
+    \begin{minted}[]{c++}
+      class A {
+        A(): A(0) {}
+        A( int j ): i(j) {}
+        int i;
+      };
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Programming environment:Embracing C++11 standard }
+  rvalue, universal references, \mintinline{c++}{std::move},
+  \mintinline{c++}{std::forward}
+  \begin{minted}[autogobble,fontsize=\small]{c++}
+    template<typename SpaceType, typename ExprType,
+             typename... Args>
+boost::shared_ptr<NullSpace<double>>
+nullspace_ptr( boost::shared_ptr<SpaceType> Xh,
+               ExprType&& e, Args... args )
+{
+    auto K = boost::make_shared<NullSpace<double>>();
+    nullspace( *K, Xh, e, args...);
+    return K;
+}
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Programming environment:Embracing C++11 standard }
+     Using \mintinline{c++}{using} for aliases
+\begin{minted}[autogobble,fontsize=\small]{c++}
+template<typename MeshT>
+using mesh_type = typename
+   mpl::if_<Feel::detail::is_shared_ptr<MeshT>,
+            mpl::identity<typename MeshT::element_type>,
+            mpl::identity<MeshT>>::type::type;
+auto mesh = loadMesh(_mesh=new Mesh<Simplex<2>>);
+CHECK(boost::is_same<mesh_type<delctype(mesh)>,
+                     Mesh<Simplex<2>>>::value==true);
+auto mesh=...
+Pch_ptrtype<decltype(mesh),2> Xh = Pch<2>(mesh);
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Testsuite: almost there}
+%  \mint{shell}{cd testsuite && ctest -j10 -R .}
+  \begin{minted}[fontsize=\tiny]{shell}
+    97% tests passed, 7 tests failed out of 217
+
+Label Time Summary:
+testalg              =  30.09 sec
+testcore             =  22.03 sec
+testcrb              =  23.26 sec
+testdiscr            =  91.51 sec
+testfilters          =  15.00 sec
+testintegration      =  21.96 sec
+testinterpolation    =  13.33 sec
+testleaks            =  22.74 sec
+testmaterial         =   0.88 sec
+testmath             =   1.14 sec
+testmesh             =  22.60 sec
+testmodels           =   3.92 sec
+testopt              =   1.42 sec
+testpoly             =  35.05 sec
+testts               =   4.93 sec
+testvf               =  11.71 sec
+
+Total Test time (real) =  89.83 sec
+
+The following tests FAILED:
+	 37 - feelpp_test_eigenmode-np-6 (Timeout)
+	 38 - feelpp_test_eigenmode-np-1 (Timeout)
+	 77 - feelpp_test_modelproperties-np-6 (Failed)
+	 78 - feelpp_test_modelproperties-np-1 (Failed)
+	 79 - feelpp_test_form_interpolation-np-1 (Timeout)
+	157 - feelpp_test_project-np-1 (Failed)
+	170 - feelpp_test_mortar-np-1 (Failed)
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Environment}
+  \begin{itemize}
+  \item Multi-threading support
+    \begin{itemize}
+    \item \mintinline{c++}{single} only one thread
+    \item \mintinline{c++}{funneled} only main thread make MPI calls
+    \item \mintinline{c++}{serialized} Only one thread at the time do
+      MPI calls
+    \item \mintinline{c++}{multiple} Multiple thread may do MPI calls.
+    \end{itemize}
+  \item Internal reorganisation that uses c++11 construction delegation
+  \end{itemize}
+
+\end{frame}
+\begin{frame}
+  \frametitle{Environment}
+  \inputminted[fontsize=\scriptsize]{c++}{Codes/prudhomme/fud4/env.cpp}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Miscellaneous/Contrib}
+  \begin{itemize}
+  \item \texttt{Paralution} : solvers/preconditioners for hybrid computing
+  \item \texttt{NT2} : Matlab in C++
+  \item \texttt{NLOpt} : A collection of algorithms for Non-Linear optimization
+  \item \texttt{IpOpt}: Interior point method
+  \end{itemize}
+\end{frame}
+
+\section{Mesh }
+
+\begin{frame}[fragile]{Mesh}
+  \begin{itemize}
+  \item filters can take a list of markers and most
+    algorithms(integration,interpolation) have now been modified to
+    support a list of filters
+  \item when \mintinline{c++}{markedpoints},
+    \mintinline{c++}{markededges} are non-empty then we attach now
+    the list of elements (which are not ghost) to which these entities
+    are associated
+  \item Memory : we do not store anymore a lot of data but recompute
+    them as needed (see \verb+feature/edge+)
+  \end{itemize}
+\end{frame}
+
+\section{Finite Element Framework}
+
+\begin{frame}[fragile]{Vectorial Finite Elements}
+  $H_{\mathrm{hdiv}}$ and $H_{\mathrm{curl}}$ finite elements have
+  entered Feel++ and are now used daily (see \verb+@cdaversin+,
+  \verb+romainhild+, \verb+vhuber+
+  presentation)
+  \begin{itemize}
+  \item Raviart-Thomas elements
+  \item First kind Nedelec elements
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Raviart-Thomas}
+  \begin{itemize}
+  \item Support only lowest order $\mathbb{R}\mathbb{T}_0$ (higher order to be debugged)
+  \item BDM (full polynomial space) should be supported
+    (required Nedelec 1st kind)
+  \end{itemize}
+  \inputminted[fontsize=\scriptsize]{c++}{Codes/prudhomme/fud4/rt.cpp}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nedelec}
+  \begin{itemize}
+  \item Support only  lowest order first kind $\mathbb{N}_0$ (higher order to be
+    debugged)
+  \item Second kind (full polynomial space) should be supported
+    (require RT)
+  \end{itemize}
+  \inputminted[fontsize=\scriptsize]{c++}{Codes/prudhomme/fud4/ned.cpp}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interpolation}
+  \begin{itemize}
+  \item We have a general interpolation framework now: we use to
+    support only Lagrange finite elements.
+  \item we can now use the interpolant associated to the supported
+    nodal finite elements space
+  \end{itemize}
+  \inputminted[fontsize=\scriptsize]{c++}{Codes/prudhomme/fud4/interp.cpp}
+\end{frame}
+\begin{frame}{Interpolation: Local Interpolant}
+  \begin{block}{Local Interpolant}
+    Consider the finite element $(K\subset\mathbb{R}^d,P=\spn\{\phi_i\},\Sigma=\{\ell_i,
+    i=1\ldots \dim P\})$, the local interpolant reads
+    \begin{equation}
+      \pi_h u = \sum_i \ell_i(u) \phi_i \ \in P
+    \end{equation}
+    The local interpolant is now implemented in the associated finite element
+    class. It is generic from the global interpolant point of view
+  \end{block}
+\end{frame}
+\begin{frame}{Interpolation: Global Interpolant}
+  \begin{block}{Global Interpolant}
+    The global interpolant requires
+    \begin{itemize}
+    \item the reference finite element
+    $(\hat{K},\hat{P},\hat{\Sigma})$
+     \item the geometric
+       transformation $\psi_K : \hat{K} \rightarrow K$ and possibly
+       associated Piola transforms (e.g. Raviart-Thomas and Nedelec).
+     \item for Raviart-Thomas and Nedelec a unique definition of normal and edge
+       tangents respectively (use permutations developed for high order)
+    \end{itemize}
+    \begin{alertblock}{}
+      \alert{Pass only the function $u$ to be interpolated (and not \emph{e.g.} $u
+      \cdot n$ for Raviart-Thomas)!}
+    \end{alertblock}
+  \end{block}
+\end{frame}
+
+\section{Time Stepping}
+
+\begin{frame}
+  \frametitle{Time Stepping}
+
+  A nice interface that handles I/O and restarts
+
+  \begin{itemize}
+  \item BDF$_q,\ q=1\ldots 4$
+  \item Newmark
+  \item On going development: an adaptative time stepping strategy
+    \texttt{TR-AB2} (Implicit TR, Explit Adams Bashforth of order 2)
+  \end{itemize}
+
+  \alert{Issue:} parallel data format for time stepping storage
+\end{frame}
+\section{Backends}
+
+\begin{frame}[fragile]
+  \frametitle{Backends}
+  \alert{Backends} are the working horse of Feel++ (a part from
+  assembly/interpolation).
+  \begin{itemize}
+  \item create submatrices (e.g. for domain decomposition or multiphysics)
+  \item deep integration through cfg files of PETSc
+    solver/preconditioners into Feel++
+  \item support of multigrid preconditioners : \textsc{ml},
+    \textsc{gamg}, \textsc{boomeramg}
+  \item support control (33 options) of \textsc{mumps} (see
+    \href{https://github.com/feelpp/feelpp/issues/499}{Issue 499 on Github}, for \verb+i=1...33+
+    \begin{minted}[autogobble]{shell}
+      --<backend prefix>.pc-factor-mumps.icntl-<i>=<value>
+      or in .cfg file
+      [<backend prefix>]
+      pc-factor-mumps.icntl-<i>=<value>
+    \end{minted}
+  \item monitors are customized with respect to the name of the
+    backend (easier now to look at embedded ksp solvers convergence)
+  \item
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Backends: Null Spaces}
+  Feel++ now support the definition of (near) null space and pass that
+  information to the backend to ensure scalability (e.g. in
+  elasticity) and in particular for multigrid methods
+
+  \inputminted[fontsize=\scriptsize]{c++}{Codes/prudhomme/fud4/nullspace.cpp}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Backends: In the pipeline}
+  \begin{itemize}
+  \item provide a deep interface to SLEPc similar to PETSc (required by
+    NS2++ project see \verb+romainhild+ presentation)
+  \item provide an interface to non-linear preconditioners(for
+    non-linear solvers), PETSc provides a nice framework for that
+  \item Other backends:
+    \begin{itemize}
+    \item improve support for \alert{Eigen}
+    \item start support for \alert{Paralution}
+    \item start support for \alert{NT$_2$}
+    \item have another look at Trilinos framework?
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{In-House preconditioners}
+  \begin{itemize}
+  \item \verb+@prj-+ presents HPDDM
+  \item \verb+asamake+ presents the substructuring preconditioner for
+    the h-p mortar
+  \end{itemize}
+\end{frame}
+
+\section{Operator Framework}
+\begin{frame}
+  \frametitle{Operator Framework: why ?}
+  We support PETSc \texttt{fieldsplit} extensively: it enables
+  multi-physics proeconditioners. However we had difficulties getting
+  good results for some incompressible Navier-Stokes problems.
+
+  \centering
+  \vfill\vspace{1em}\usebeamerfont{section title}{\scshape Introduce Operator Framework}\vfill
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Operator Framework: Operator Interface}
+  The framework provides a basic operator interface
+  \begin{minted}[fontsize=\scriptsize,autogobble]{c++}
+    // operator A
+    apply(vector_ptrtype x, vector_ptrtype y )
+    { /*y = A x;*/ }
+    // operator A^-1
+    applyInverse(vector_ptrtype x, vector_ptrtype y )
+    { /*y = A^-1 x;*/ }
+    // use transpose
+    setUseTranspose(bool) -> true: A^T, false: A
+    // domain and image map: necessary when domain and image space are
+    // not of the same dimension
+    domainMap()
+    imageMap()
+    // gives a name or label to the operators and generate names from
+    // subsequent operations
+    label()
+    setLabel(std::string)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Operator Framework: Operators}
+  Now that the operator interface is define, we define operators
+  \begin{itemize}
+  \item \mintinline{c++}{op(A)}: operator associated to a matrix
+  \item \mintinline{c++}{C=compose(A,B)}: composition of two operators
+    $C=A B$
+  \item \mintinline{c++}{C=inv(A)}: inverse of operator $C=A^{-1}$
+  \item \mintinline{c++}{C=scale(A,alpha)}: scale operator $C=\alpha
+    A$
+  \item \mintinline{c++}{C=diag(A)}: diagonal of operator $C=\diag A$
+  \item \mintinline{c++}{C=diag(A,B)}: diagonal operator $D=
+    \begin{pmatrix}
+      A & 0\\
+      0 & B
+    \end{pmatrix}
+$
+  \item \mintinline{c++}{D=triu(A,B,C)}: upper triangular operator  $D=
+    \begin{pmatrix}
+      A & B\\
+      0 & C
+    \end{pmatrix}
+$
+\item \mintinline{c++}{D=tril(A,B,C)}: lower triangular operator $D=
+    \begin{pmatrix}
+      A & 0\\
+      B & C
+    \end{pmatrix}
+$
+\item actually the previous three operations can handle a larger number of blocks
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Operator Framework : application to Stokes/Navier-Stokes...}
+  Consider the following system
+  \begin{equation}
+    \label{eq:1}
+    A = \begin{pmatrix}
+      F & B^T\\
+      B & 0
+    \end{pmatrix}
+  \end{equation}
+  where $F$ is the diffusion or convection-diffusion operator on
+  velocity and $B$, $B^T$ the coupling blocks between velocity and
+  pressure.
+
+  A preconditioner for
+  $A$ reads (see \texttt{@ranine} presentation)
+  \begin{equation}
+    \label{eq:2}
+    P = \begin{pmatrix}
+      F & B^T\\
+      0 & \hat{S}
+    \end{pmatrix}
+  \end{equation}
+  where $\hat{S}$ is an efficient approximation of the Schur
+  complement. One can take for low Reynolds number
+  $\hat{S}=-\frac{1}{\nu}M_p$ where $M_p$ is the pressure mass matrix.
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Operator Framework : application to Stokes/Navier-Stokes...}
+  \inputminted[fontsize=\scriptsize,autogobble,mathescape]{c++}{Codes/prudhomme/fud4/op.cpp}
+\end{frame}
+
+\section{DSEL: New Keywords and Features}
+\begin{frame}[fragile]{DSEL: New Keywords and Features}
+  \begin{itemize}
+  \item \mintinline{c++}{rand<double|int>(a,b)} : generate a float or
+    discrete random number between \texttt{a} and \texttt{b} depending on the type of \texttt{a}
+    and \texttt{b}
+  \item \mintinline{c++}{floor(expr),ceil(expr)} : floor and ceil of
+    an expression
+  \item \mintinline{c++}{atan2} : compute atan2 of expression
+  \item \mintinline{c++}{cast<type>(expr)} : cast an expression to
+    type \mintinline{c++}{type}.
+  \item \mintinline{c++}{%} : modulo operation (integers only,
+                         %requires casting)
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{New Keywords and Features}
+  \mintinline{c++}{idf(.)} : enables functors in the language (not
+  really new, not much advertised but starts to be used)
+  \begin{minted}[fontsize=\scriptsize,autogobble]{c++}
+        struct kappa
+        {
+          static const size_type context = vm::JACOBIAN|vm::POINT;
+          typedef double value_type;
+          typedef value_type evaluate_type;
+          static const uint16_type rank = 0;
+          static const uint16_type imorder = 1;
+          static const bool imIsPoly = true;
+          value_type val = 1;
+          double operator()(uint16_type, uint16_type,
+                            ublas::vector<double> const& x,
+                            ublas::vector<double> const&) const
+          { return x[0]+x[1]; }
+        };
+        std::cout << integrate(_range=elements(mesh),
+                               _expr=idf(kappa)).evaluate();
+      \end{minted}
+
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{New Keywords and Features}
+  \mintinline{c++}{val(.)} : store evaluation of expression at
+  quadrature points, allows to speedup assembly process of bi/linear
+  forms (not new but not well known)
+  \begin{minted}[fontsize=\scriptsize,autogobble]{c++}
+    auto mesh=...;
+    auto Xh=...;
+    auto u = Xh->element();
+    auto f = sin(pi*Px())*cos(pi*Py())*cos(pi*Pz());
+    auto a = form2(_test=Xh,_trial=Xh);
+    a = integrate(_range=elements(mesh),
+                  _expr=val(f)*idt(u)*id(u)).evaluate();
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{DSEL: New Keywords and Features}
+  \alert{Support component wise Dirichlet conditions}
+  When manipulating vector fields, setting Dirichlet conditions per
+  component or working with the components is useful
+  \inputminted[fontsize=\scriptsize]{c++}{Codes/prudhomme/fud4/elas.cpp}
+\end{frame}
+
+\begin{frame}[fragile]{DSEL: New Keywords and Features}
+  \alert{\mintinline{c++}{on} and interpolation now support
+  interpolation at points (2D/3D) and edges (3D)}
+\begin{columns}[c]
+  \column{.5\linewidth}
+  \inputminted[fontsize=\tiny]{c++}{Codes/prudhomme/fud4/on.cpp}
+  \column{.5\linewidth}
+  \includegraphics[width=.8\linewidth]{dirac.png}
+\end{columns}
+
+\end{frame}
+
+\section{Model Properties Framework}
+
+\begin{frame}{Model Properties: Why?}
+  We have a nice DSEL that allows to write variational formulations,
+  we have the cfg files as well as Ginac. However everyone comes up
+  with a different solution, we need to have a more unified way to
+  describe our models.
+
+  \centering
+  \vfill\vspace{1em}\usebeamerfont{section title}{\scshape Introduce
+    Model Properties Framework}\vfill
+\end{frame}
+
+\begin{frame}{Model Properties: What?}
+
+What are model properties?
+\begin{itemize}
+\item Parameters: fixed, variables, formulas
+\item Materials
+\item Model variants
+\item Boundary Conditions
+\item Post Processing
+\end{itemize}
+and possibly more ...
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: JSON}
+  From \url{json.org}: ``json is lightweight data-interchange format. It
+  is easy for humans to read and write. It is easy for machines to
+  parse and generate. It is based on a subset of the JavaScript''
+
+  \inputminted{json}{Codes/prudhomme/fud4/turek.feelpp}
+  \begin{itemize}
+  \item Use \mintinline{c++}{boost::property_tree}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Parameters}
+  Parameters allow to define constants, variables and formulas, see \texttt{feel/feelmodels/modelparameter.hpp}
+  \begin{columns}[c]
+    \column{.5\linewidth}
+    \begin{minted}[fontsize=\scriptsize,autogobble]{json}
+      "Parameters": {
+        "Um":{
+           "type":"variable",
+           "value":0.3,
+           "min":1e-4,
+           "max":10
+         },
+         "H": {
+           "type":"constant",
+           "value":0.41
+         }}
+    \end{minted}
+    \column{.5\linewidth}
+    \begin{itemize}
+    \item can be used in boundary conditions, material properties or
+      in formulas
+    \item we should be able to define different kind of parameters and
+      customize them (e.g. random variables...)
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Materials}
+  Materials allow to define area with specific properties, see \texttt{feel/feelmodels/modelmaterials.hpp}
+  \begin{columns}[c]
+    \column{.5\linewidth}
+    \begin{minted}{json}
+  "Materials":{
+    "fluid":{
+      // density
+      "rho": "1",
+      // dynamic_viscosity
+      "mu": "0.001"
+    }},
+\end{minted}
+    \column{.5\linewidth}
+    \begin{itemize}
+    \item Currently support coefficients required by fluid and thermal
+      flows with default values
+    \item the name of the material is associated directly to a
+      physical region in Gmsh
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Boundary Conditions}
+  See \texttt{feel/feelpde/boundaryconditions.hpp}
+\begin{columns}[c]
+    \column{.5\linewidth}
+  \begin{minted}[autogobble,fontsize=\scriptsize]{c++}
+    "BoundaryConditions":{
+      "velocity": {
+        "Dirichlet": {
+          "inflow": {
+            "expr":"{4*Um*y*( H-y )/H^2,0}:y:Um:H"
+          },
+          "wall": {
+            "expr":"{0,0}"
+          },
+          "cylinder":{
+            "expr":"{0,0}"
+          } },
+        "Neumann": {
+          "outlet": {
+            "expr":"{0,0,0,0}"
+          }
+        }}}, // BoundaryConditions
+  \end{minted}
+\column{.5\linewidth}
+    \begin{itemize}
+    \item Support 1 or two expressions (Dirichlet, Neumann, Robin)
+    \item Support create of scalar, vector or matrix fields
+      \begin{minted}[autogobble,fontsize=\scriptsize]{c++}
+        // retrieve a list of all vector fields expressions
+        //associated to velocity and Dirichlet conditions
+        dirichlet_cond = bc.getVectorFields<dim>
+                ( "velocity", "Dirichlet" );
+
+        // retrieve a list of all matrix fields expressions
+        // associated to velocity and neumann conditions
+        neumann_cond = bc.getMatrixFields<dim>
+                ( "velocity", "Neumann" );
+      \end{minted}
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Post Process}
+  Define outputs for the model to be computed, see \texttt{feel/feelmodels/modelpostprocess.hpp}
+\begin{columns}[c]
+    \column{.5\linewidth}
+  \begin{minted}[autogobble,fontsize=\scriptsize]{c++}
+    "PostProcess":
+    {
+      "Force":["cylinder"],
+      "PressureDifference":
+      {
+        "x1":"{0.15,0.2}",
+        "x2":"{0.25,0.2}"
+      }}
+  \end{minted}
+\column{.5\linewidth}
+It is up to the model to decide the type of postprocessing it supports
+\begin{itemize}
+\item Compute drag and lift (Force applied to the structure)
+\item Compute fields at points
+\item Compute flow rates
+\item ...
+\end{itemize}
+  \end{columns}
+\end{frame}
+
+\plain{\small\texttt{feel/feelmodels/fluid/fluidmechanics.hpp}}
+
+\section{Reduced Basis}
+\begin{frame}[fragile]
+  \frametitle{Reduced Basis}
+  \begin{itemize}
+  \item A Reduced Basis framework to handle  non-linear multiphysic
+    problems, the enablers are
+    \begin{itemize}
+    \item EIM, Empirical Interpolation Method
+    \item RB Reduced Basis method
+    \end{itemize}
+  \item \verb+@cdaversin+ presents a Simultaneous EIM-RB (SER) algorithm
+    that is a huge step forward using RB in industrial context
+  \item \verb+@jbwahl+ presents the extension of the framework to
+    saddle point problems
+  \end{itemize}
+\end{frame}
+
+\section{Post Processing}
+
+\begin{frame}[fragile]
+  \frametitle{Importers}
+  \begin{itemize}
+  \item We import data using Gmsh, very good so far
+  \item For large scale computation we need now a dataformat that
+    scales when (tens of) thousands of cores read the data files
+  \item AngioTK with Kitware and the Vivabrain project, see \verb+@vincentchabannes+ presentation for a
+    framework from medical to numerical simulations !
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile]{Exporters}
+  \begin{columns}[c]
+    \column{.5\linewidth}
+    \begin{itemize}
+    \item Formats Ensight Gold, HDF5, VTK, Gmsh (see @aancel presentation)
+    \item Exporters
+      \begin{itemize}
+      \item by default consider coordinates are changing, if geometry
+        does not change, use \texttt{static}
+      \end{itemize}
+    \end{itemize}
+    \column{.5\linewidth}
+    \inputminted[fontsize=\tiny]{c++}{Codes/prudhomme/fud4/exporter.cpp}
+    %\inputminted{text}{exporter.cfg}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]{In-Situ Visualisation}
+  \begin{columns}[c]
+    \column{.5\linewidth}
+    Co-Simulation within Paraview
+    \begin{itemize}
+    \item support for Catalyst
+    \item directly run simulation with visualisation capabilities (in-situ)
+    \end{itemize}
+
+    Paraview plugin for Feel++
+    \begin{itemize}
+    \item directly integrate Feel++ code into paraview as a plugin
+    \end{itemize}
+    \column{.5\linewidth}
+    %image here
+  \end{columns}
+
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}{Summary}
+
+  \begin{itemize}
+  \item Lots of exciting (new) projects with a strong mutualisation of
+    development
+  \item The challenges for Feel++ are vertical (HPC, scaling to
+    tens/hundrends of millions) and horizontal
+    (MultiPhysics)
+  \item The brainstorming would help identify recurrent issues,
+    necessary/usefull developments...
+  \end{itemize}
+
+  Get the source of Feel++
+
+  \begin{center}\url{http://github.com/feelpp/feelpp}\end{center}
+
+\end{frame}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "lecture.feelpp.slides"

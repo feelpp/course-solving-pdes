@@ -1,12 +1,355 @@
 \section{Introduction to Feel++}
-\begin{frame}{General Presentation}
+
+\begin{frame}{Versatile}
+
+  \begin{columns}[c]
+    \column{.6\linewidth}
+    \clipimg{image=figures/feelpp/Gallery-feelpp-600x600.jpg,image width=2cm}
+    \column{.4\linewidth}
+    A large range of \alert{numerical methods} to solve partial differential
+    equations: cG, dG, hdG, crb, \ldots in 1D, 2D and 3D
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Powerful}
+
+  \begin{columns}[c]
+    \column{.4\linewidth}
+    Support for \alert{high performance computing} up to thousands of cores
+    for linear and non-linear problems using  \alert{PETSc/SLEPc} and
+    \alert{InHouse} solution strategies
+    \column{.6\linewidth}
+    \centerline{\clipimg{image=figures/feelpp/supercomputer-1-600x600.jpg,image width=2cm}}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Expressive}
+
+  \begin{columns}[c]
+        \column{.6\linewidth}
+
+        \centerline{\clipimg{image=figures/feelpp/feelpp-dsel-600x600.png,image width=2cm}}
+
+    \column{.4\linewidth}
+    A language for \alert{Galerkin methods} embedded into C++ for
+    maximal mathematical \alert{expressivity}.
+
+    Support for meshes, function
+    spaces and elements, bilinear and linear forms, algebraic
+    representation and post-processing.
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Toolboxes :: Monophysics}
+  \begin{columns}[c]
+    \column{.3\linewidth}
+    \centerline{ \Large CFD}\\[.5cm]
+    \includegraphics[width=\linewidth]{figures/feelpp/400x200/FlowAroundCylinder-400x200.png}
+    \column{.3\linewidth}
+    \centerline{ \Large CSM}\\[.5cm]
+    \includegraphics[width=\linewidth]{figures/feelpp/400x200/torsionbarNeoHookIncompT2-400x200.png}
+    \column{.3\linewidth}
+    \centerline{\Large Heat Transfer}\\[.5cm]
+    \includegraphics[width=\linewidth]{figures/feelpp/400x200/heat-transfer-building-400x200.png}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Toolboxes :: Multiphysics}
+  \begin{columns}[c]
+    \column{.3\linewidth}
+    \centerline{\Large FSI}\\[.5cm]
+    \includegraphics[width=\linewidth]{figures/feelpp/400x200/wp3dP3P2G2-struct-disp-t2-400x200.png}
+    \column{.3\linewidth}
+    \centerline{\Large Heat \& Fluid}\\[.5cm]
+    \includegraphics[width=\linewidth]{figures/feelpp/400x200/cabine-400x200.png}
+    \column{.3\linewidth}
+    \centerline{\Large Thermoelectric}\\[.5cm]
+    \includegraphics[width=\linewidth]{figures/feelpp/400x200/peltiermodule-electricpotential-400x200.png}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{A wide range of numerical methods}
+  \begin{center}
+  \centerline{\includegraphics[width=1.1\linewidth]{figures/feelpp/feelpp-methods.png}}
+  \end{center}
 
 \end{frame}
 
-\section{Installation with Docker}
+% \begin{frame}{\feel}
+%   \begin{alertblock}{Finite Element Embedded Library and Language in C++}
+%     A \alert{Domain Specific Language} for PDEs embedded in C++ providing a syntax very
+%     close to the mathematical language
+%   \end{alertblock}
+
+%   \begin{itemize}
+%   \item Supports \alert{simplex}, \alert{hypercube}, \alert{high
+%       order} meshes as well as curves and surfaces
+%   \item Supports generalized \alert{arbitrary order Galerkin methods
+%       (cG, dG, hdG, crb, \ldots) in 1D, 2D and 3D}
+%   \item Supports \alert{seamless interpolation}
+%   \item Supports \alert{seamless parallel computing}
+%   \item Supports \alert{large scale parallel linear and non-linear
+%       solvers} (PETSc/SLEPc \& \alert{InHouse})
+%   \item Supports various toolboxes : CFD, CSM, FSI, Heat Transfer, ThermoElectric
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}{\feel}
+  \begin{columns}[c]
+    \column{.45\linewidth}
+    \scalebox{.7}{
+    \tikzstyle{root concept}+=[concept color=white!80]
+    \tikzstyle{level 1 concept}+=[concept color=ljk!80, sibling angle=60,text=black]
+    \tikzstyle{every annotation}=[fill=black!50,opacity=0.5,text=white,scale=.7]
+    \begin{tikzpicture}[->]
+      \path[mindmap,concept color=black!60,text=white]
+      node[concept,scale=.7] {Feel++}
+      % node[concept,scale=.7] {Scientific Computing}
+      [clockwise from=0]
+      % child[concept,scale=.6] { node[concept,scale=.7] (phys) {Physics Mechanics Biology Processing} }
+    child[concept,scale=.6] { node[concept,scale=.7] (phys) {VIVABRAIN} }
+    child[concept,scale=.6] { node[concept,scale=.7] (am) {HiFiMagnet} }
+    child[concept,scale=.6] { node[concept,scale=.7] (nm) {HAMM / RB4FASTSIM} }
+    child[concept,scale=.6] { node[concept,scale=.7] (cs) {CHORUS} }
+    child[concept,scale=.6] { node[concept,scale=.7] (cs) {EYE2BRAIN} }
+    child[concept,scale=.6] { node[concept,scale=.7] (cs) {Cemosis } }
+    child[concept,scale=.6] { node[concept,scale=.7] (cs) {Teaching} }
+    ;
+    % \begin{pgfonlayer}{background}
+    %   \draw [concept connection]
+    %   (phys) edge node[above,sloped]{} (am)
+    %   (am) edge node[above,sloped]{} (nm)
+    %   (nm) edge node[above,sloped]{} (cs)
+    %   (cs) edge node[above,sloped]{} (va)
+    %   (va) edge node[above,sloped]{} (op);
+    %   %(va) edge node[above,sloped]{} (phys);
+    % \end{pgfonlayer}
+   \end{tikzpicture}
+   }
+    \column{.45\linewidth}
+    \scalebox{.7}{
+\tikzstyle{root concept}+=[concept color=white!80]
+\tikzstyle{level 1 concept}+=[concept color=ljk!80, sibling angle=90]
+\tikzstyle{every annotation}=[fill=black!50,opacity=0.5,text=black]
+\begin{tikzpicture}[mindmap,concept color=black!60,text=black]
+  %%\path[clip] (-6,0) rectangle (6,6);
+  \node[concept,text=white] (root)  {Complxity of scientific computing software}
+  [clockwise from=45]
+  child[concept] { node[concept] (mod) {Physical models} }
+  child[concept] { node[concept] (alg) {Algebraic solvers} }
+  child[concept] { node[concept] (cs) {Computer science} }
+  child[concept] { node[concept] (num) {Numerical methods} };
+
+  \node[name=dsl,fill=ljk!50,ellipse,decorate,decoration=snake,minimum width=3cm,
+  minimum height=2cm] at (root.center) {\bf domain specific language for
+  Galerkin methods};
+
+  \node[name=a1,single arrow, draw=white!80, rotate=-90,scale=.2,fill=red] at
+  (dsl.north) {};
+  \node[name=a2,single arrow, draw, white!80, rotate=-90,scale=.2,fill=red] at
+  (dsl.south) {};
+  \node[decorate,decoration=snake,fill=ljk!50,above,ellipse,minimum
+  height=1cm] at (a1.west)  {Express};
+  \node[decorate,decoration=snake,fill=ljk!50,below,ellipse,minimum height=1cm] at (a2.tip)  {Generate};
+%  \node[single arrow, draw, gray!50, rotate=-45,scale=.2,fill=black!60] at
+%  (dsl.south east) {Generate};
+
+
+  \begin{pgfonlayer}{background}
+
+    %\draw[pink,thick] (root.north east) -- (root.north west);
+
+    \draw [concept connection,white] (num.west) --
+    node[fill=ljk!50,above,sloped,text=black,ellipse,minimum height=1cm]
+    {Best expressivity with high level language}
+    (mod.east) ;
+
+    \draw [concept connection,white]
+    (cs.west) -- node[fill=ljk!50,below,sloped,text=black,ellipse,minimum
+    height=1cm] {Best performance with low level language} (alg.east) ;
+
+    %\draw[concept connection,-,white] (root.north west) -- (root.north east);
+
+  \end{pgfonlayer}
+
+
+
+  % \path[fill=ljk!20,-]
+  % (root.north west)  .. controls (0,1cm) .. (root.north east) -- (root.south east) .. controls (0,-1cm) .. (root.south west) --  (root.north west);
+\end{tikzpicture}}
+
+    %\includegraphics[width=\linewidth]{genprog2-crop.pdf}
+
+  \end{columns}
+  \begin{alertblock}{}
+    Mathematical language for scientific computing
+    \begin{itemize}
+    \item to communicate between disciplines (Math, CS, Physics, Engineering...)
+    \item to break complexity
+    \end{itemize}
+    \centerline{Usage Scenarii: Research, R\&D (``Bureau d'étude''), Teaching }
+  \end{alertblock}
+\end{frame}
+
+\subsection{Partners and Collaborators}
 \begin{frame}
+  \frametitle{Partners/Collaborators}
+
+  \begin{columns}[c]
+    \column{.5\linewidth}
+  \textbf{France}
+  \begin{itemize}
+  \item U. Strasbourg
+  \item U. Grenoble Alpes
+  \item UPMC
+  \item LNCMI/CNRS
+  \item U. Toulouse
+  \end{itemize}
+  \column{.5\linewidth}
+  \textbf{Abroad}
+  \begin{itemize}
+  \item IUPUI (USA)
+  \item IMATI (Italy)
+  \item U. Coimbra (Portugal)
+  \end{itemize}
+
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Companies}
+  \begin{center}
+    \centerline{\includegraphics[width=1\linewidth]{figures/feelpp/feelpp-companies.png}}
+  \end{center}
+\end{frame}
+% \begin{frame}
+%   \frametitle{People}
+
+%   \begin{columns}[c]
+%     \column{.5\linewidth}
+%     \textbf{In}
+%     \begin{itemize}
+%   \item R. Hild (Eng.)
+%   \item J.B. Wahl (Phd)
+%   \item M. Spreng, T. Lantz,B. Vanthong (Msc)
+%   \item M. Boileau (Eng CNRS)
+%   \item G. Ghigliotti (MDC, LEGI, Grenoble) + Msc ?
+%   \end{itemize}
+%   \column{.5\linewidth}
+%   \textbf{Out}
+%   \begin{itemize}
+%   \item V. Doyeux (Austin USA)
+%   \item P. Jolivet (INF ETHZ)
+%   \item A. Samake (Ice and See Lab, Norway)
+%   \item S. Veys (CEA Saclay)
+%   \item S. Priem, J. Veysset
+%   \end{itemize}
+%   \end{columns}
+% \end{frame}
+\subsection{Projects with Feel++}
+\begin{frame}{Projects with Feel++}
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/vivabrain.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/eye2brain.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/blood-rheology.png}
+    \end{subfigure}\\
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/hemotumpp.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/optical-tomography.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/hifimagnet.png}
+    \end{subfigure}
+
+  \end{figure}
 
 \end{frame}
+
+
+\begin{frame}{Projects with Feel++}
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/chorus.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/holo3.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/mso4sc.png}
+    \end{subfigure}\\
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/po.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/bioreactor-sivibirpp.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{.3\linewidth}
+      \includegraphics[width=1.\linewidth]{figures/applications/gazomat.png}
+    \end{subfigure}
+
+  \end{figure}
+
+\end{frame}
+
+
+\section{Feel++ on the web}
+
+
+\begin{frame}{\feel web ecosystem}
+  \begin{itemize}
+  \item \faChrome: \url{http://www.feelpp.org}
+  \item \faGithub :: \url{https://github.com/feelpp/feelpp}
+  \item \faGooglePlus: \url{http://plus.feelpp.org}
+  \item \faForumbee: \url{http://forum.feelpp.org} (Gitter)
+  \item \faNewspaperO: \url{http://publications.feelpp.org} (Hal)
+  \item \faYoutube : \url{http://youtube.feelpp.org}
+  \item \faTwitter: \url{http://twitter.feelpp.org}
+  \end{itemize}
+\end{frame}
+
+
+
+\section{Installing Feel++}
+
+\subsection{Docker (recommended)}
+
+\begin{frame}{Docker (recommended)}
+  This is the preferred way for end users
+
+
+\end{frame}
+
+\subsection{Linux}
+
+\begin{frame}{Ubuntu}
+
+\end{frame}
+
+\begin{frame}{Debian}
+
+\end{frame}
+
+\subsection{MacOS X}
+
+
+\begin{frame}[fragile]{Using Homebrew}
+  \begin{bashcode}
+    brew tap
+  \end{bashcode}
+\end{frame}
+
+
+\subsection{Windows?}
+
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "lecture.feelpp.slides"

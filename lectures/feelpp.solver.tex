@@ -12,10 +12,11 @@ The preconditioner should satisfy certain requirements:
 \begin{itemize}
 \item Convergence should be much faster for the preconditioned
 system than for the original system. Normally this means
-that M is constructed as an easily invertible approximation
+that $M$ is constructed as an easily invertible approximation
 to $A$. Note that if $M = A$ any iterative method converges in
 one iteration.
-\item Operations with $M^{-1}$ should be easy to perform (``cheap'').
+\item Operations with $M^{-1}$ should be cheap to perform, at least
+  cheaper than $A^{-1}$
 
 \end{itemize}
 \end{frame}
