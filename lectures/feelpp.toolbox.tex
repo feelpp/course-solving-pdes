@@ -1,22 +1,190 @@
+%================================================================================
 \section[CFD]{CFD Toolbox}
-\begin{frame}{CFD}
-
+\begin{frame}[fragile]{CFD - TurekHron}
 \end{frame}
 
+\begin{frame}[fragile]{CFD - TurekHron 1}
+\end{frame}
+
+\begin{frame}[fragile]{CFD - TurekHron 2}
+\end{frame}
+
+\begin{frame}[fragile]{CFD - TurekHron 3}
+\end{frame}
+
+
+\begin{frame}[fragile]{CFD - Cavity}
+\end{frame}
+
+
+%================================================================================
 \section[CSM]{Computation Solid Mechanics Toolbox}
-\begin{frame}{CSM}
+\begin{frame}[fragile]{CSM - TurekHron}
+
+Solid model : TurekHron
+
+Config file ("csm3.cfg")
+\begin{lstlisting}
+[solid]
+filename=$toolboxes_srcdir/solid/TurekHron/csm3.json
+
+material_law=StVenantKirchhoff# StVenantKirchhoff, NeoHookean
+
+# use density and material coeff cst in appli
+jacobian-linear-update=false
+linearsystem-cst-update=false
+
+# snes and ksp config
+#reuse-prec=true#false
+#reuse-jac=true#false
+reuse-jac.rebuild-at-first-newton-step=true
+reuse-prec.rebuild-at-first-newton-step=true
+snes-maxit=500
+snes-maxit-reuse=10
+snes-ksp-maxit=1000
+snes-ksp-maxit-reuse=100
+
+# precondtioner config
+pc-type=lu #lu,gasm,ml
+ksp-converged-reason=1
+geofile=$toolboxes_srcdir/solid/TurekHron/csm.geo
+
+
+[solid.gmsh]
+hsize=0.004
+
+[ts]
+time-step=0.01
+time-final=10.01
+#restart=true
+restart.at-last-save=true
+#save.freq=2
+
+
+[exporter]
+directory=applications/models/solid/TurekHron/csm3/$solid_tag
+freq=1
+#format=ensightgold
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{CSM - TurekHron}
+Json file
+
+\begin{lstlisting}
+{
+    "Name": "Solid Mechanics ",
+    "ShortName":"Solid",
+    "Model":"Hyper-Elasticity",
+    "Parameters":
+    {
+	"gravity":
+	{
+	    "value":"2"
+	}
+    },
+    "Materials":
+    {
+	"beam":{
+	    "name":"solid",
+	    "E":"1.4e6",
+	    "nu":"0.4",
+	    "rho":"1e3"
+	}
+    },
+
+    BoundaryConditions":
+    {
+        "displacement":
+        {
+            "Dirichlet":
+            {
+                "fixed-wall":
+                {
+                    "expr":"{0,0}"
+                }
+            },
+            "Neumann_scalar":
+            {
+                "free-wall":
+                {
+                    "expr":"0" 
+                }
+            },
+            "VolumicForces":
+            {
+                "":
+                {
+                    "expr":"{0,-gravity*1e3}:gravity" 
+                }
+            }
+        }
+    },
+
+    "PostProcess":
+    {
+	"Fields":["displacement"],
+	"Measures":
+	{
+	    "Points":
+	    {
+		"pointA":
+		{
+		    "coord":"{0.6,0.2,0}",
+		    "fields":["displacement","velocity"]
+		}
+	    },
+	    "Maximum":
+	    {
+		"free-wall":
+		{
+		    "markers":"free-wall",
+		    "fields":["displacement","velocity"]
+		}
+	    }
+	}
+    }
+
+}
+\end{lstlisting}
+
+\end{frame}
+%--------------------------------------------------------------------------------
+
+\begin{frame}[fragile]{CSM - TorsionBar}
 
 \end{frame}
 
-\section[Heat Transfer]{Heat Transfer Toolbox}
-\begin{frame}{Heat Transfer}
+%================================================================================
+\begin{frame}[fragile]{ FSI - WavePressure 2D}
 
 \end{frame}
 
-\section{Coupling Models}
-\begin{frame}{Couping Models}
+\begin{frame}[fragile]{ FSI - WavePressure 3D}
 
 \end{frame}
+
+%================================================================================
+
+\begin{frame}[fragile]{ AERO - Cavity Natural Convection 2D}
+
+\end{frame}
+
+%================================================================================
+\begin{frame}[fragile]{ THERMO - thermo 2d}
+
+\end{frame}
+
+%\section[Heat Transfer]{Heat Transfer Toolbox}
+%\begin{frame}{Heat Transfer}
+%
+%\end{frame}
+%
+%\section{Coupling Models}
+%\begin{frame}{Couping Models}
+%
+%\end{frame}
 
 
 %%% Local Variables:
