@@ -1,21 +1,799 @@
+%================================================================================
 \section[CFD]{CFD Toolbox}
-\begin{frame}{CFD}
+%================================================================================
+
+%\subsection{TurekHron 1}
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron}
+
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CFD TurekHron test case directory then execute the
+CFD toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fluid_2d}]
+cd Testcases/CFD/TurekHron/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_fluid_2d \
+       --config-file cfd1.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./cfd1.cfg} and model config
+\lstinline{cfd1.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fluid_2d}]
+feelpp_toolbox_fluid_2d --help
+\end{lstlisting}
 
 \end{frame}
 
-\section[CSM]{Computation Solid Mechanics Toolbox}
-\begin{frame}{CSM}
+
+% CFD 1
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron 1 - cfd1.cfg}
+
+Config file \lstinline{~/Testcases/CFD/TurekHron/cfd1.cfg}
+
+\vspace{5mm}
+% 35 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/cfd/turekhron/cfd1.cfg}
 
 \end{frame}
 
-\section[Heat Transfer]{Heat Transfer Toolbox}
-\begin{frame}{Heat Transfer}
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron 1 - .json}
+Model config file \lstinline{~/Testcases/CFD/TurekHron/cfd1.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/cfd/turekhron/cfd1.json}
 
 \end{frame}
 
-\section{Coupling Models}
-\begin{frame}{Couping Models}
 
+
+
+% CFD 2
+%\subsection{TurekHron 2}
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron 2 - cfd2.cfg}
+
+Config file \lstinline{~/Testcases/CFD/TurekHron/cfd2.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/cfd/turekhron/cfd2.cfg}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron 2 - .json}
+Model config file \lstinline{~/Testcases/CFD/TurekHron/cfd2.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/cfd/turekhron/cfd2.json}
+\end{frame}
+
+
+
+
+
+%\subsection{TurekHron 3}
+% CFD 3
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron 3 - cfd3.cfg}
+
+Config file \lstinline{~/Testcases/CFD/TurekHron/cfd3.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/cfd/turekhron/cfd3.cfg}
+\end{frame}
+
+
+
+\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron 3 - .json}
+Model config file \lstinline{~/Testcases/CFD/TurekHron/cfd3.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/cfd/turekhron/cfd3.json}
+\end{frame}
+
+
+
+%--------------------------------------------------------------------------------
+
+%\subsection{Cavity}
+
+
+\begin{frame}[fragile,allowframebreaks]{CFD - Cavity}
+
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CFD Lid-driven-cavity test case directory then execute the
+CFD toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fluid_2d}]
+cd Testcases/CFD/Lid-driven-cavity/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_fluid_2d \
+       --config-file cavity2d.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./cavity2d.cfg} and model config
+\lstinline{cavity2d.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fluid_2d}]
+feelpp_toolbox_fluid_2d --help
+\end{lstlisting}
+
+You can test also the 3d case.
+
+\end{frame}
+
+
+
+%\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron - cfd1.cfg}
+%
+%Config file \lstinline{~/Testcases/CFD/TurekHron/cfd1.cfg}
+%
+%\vspace{5mm}
+%% 42 code lines
+%\lstinputlisting[language=Bash,mathescape=false,
+%firstline=1,lastline=15]
+%{codes/cfd/turekhron/cfd1.cfg}
+%
+%\end{frame}
+%
+%
+%
+%\begin{frame}[fragile,allowframebreaks]{CFD - TurekHron - .json}
+%Model config file \lstinline{~/Testcases/CFD/TurekHron/cfd1.json}
+%\vspace{5mm}
+%% 75 code lines
+%\lstinputlisting[language=json,mathescape=false,
+%firstline=1,lastline=12]
+%{codes/cfd/turekhron/cfd1.json}
+
+%\end{frame}
+
+
+
+
+
+
+
+
+
+%================================================================================
+\section[CSM]{Computation Solid Mechanics toolbox}
+%================================================================================
+
+%\subsection{TurekHron}
+
+\begin{frame}[fragile,allowframebreaks]{CSM - TurekHron}
+
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CSM TurekHron test case directory then execute the
+solid toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_solid_2d}]
+cd Testcases/CSM/TurekHron/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_solid_2d \
+       --config-file csm3.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./csm3.cfg} and model config
+\lstinline{csm3.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_solid_2d}]
+feelpp_toolbox_solid_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+
+
+\begin{frame}[fragile,allowframebreaks]{CSM - TurekHron - csm3.cfg}
+
+Config file \lstinline{~/Testcases/solid/TurekHron/csm3.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/csm/turekhron2d/csm3.cfg}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile,allowframebreaks]{CSM - TurekHron - .json}
+Model config file \lstinline{~/Testcases/solid/TurekHron/csm3.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/csm/turekhron2d/csm3.json}
+
+\end{frame}
+
+
+
+%--------------------------------------------------------------------------------
+
+%\subsection{TorsionBar}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - TorsionBar}
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CSM TurekHron test case directory then execute the
+solid toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_solid_2d}]
+cd Testcases/CSM/torsionbar
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_stress_2d \
+       --config-file torsionbar.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./torsionbar.cfg} and model config
+\lstinline{torsionbar.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_stress_2d}]
+feelpp_toolbox_stress_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - TorsionBar - .cfg}
+    Config file \lstinline{~/Testcases/CSM/torsionbar/torsionbar.cfg}
+\vspace{5mm}
+    \lstinputlisting[language=json,mathescape=false]{codes/csm/torsionbar2d/torsionbar.cfg}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - TorsionBar - .json}
+    Model config file \lstinline{~/Testcases/CSM/torsionbar/torsionbar.json}
+\vspace{5mm}
+\lstinputlisting[language=json,mathescape=false]{codes/csm/torsionbar2d/torsionbar.json}
+\end{frame}
+
+
+%--------------------------------------------------------------------------------
+
+%\subsection{Solenoid}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - Solenoid}
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CSM Solenoid test case directory then execute the
+solid toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_solenoid_3d}]
+cd Testcases/CSM/Solenoid
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_solenoid_3d \
+       --config-file sol.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./sol.cfg} and model config
+\lstinline{sol.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_solenoid_3d}]
+feelpp_toolbox_solenoid_3d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, allowframebreaks]{CSM - Solenoid - .cfg}
+Config file \lstinline{~/Testcases/CSM/Solenoid/sol.cfg}
+\vspace{5mm}
+\lstinputlisting[language=json,mathescape=false]
+{codes/csm/solenoid/sol.cfg}
+\framebreak
+\end{frame}
+
+
+
+\begin{frame}[fragile, allowframebreaks]{CSM - Solenoid - .json}
+Model config file \lstinline{~/Testcases/CSM/Solenoid/sol.json}
+\vspace{5mm}
+    \lstinputlisting[language=json,mathescape=false]
+{codes/csm/solenoid/sol.json}
+\framebreak
+\end{frame}
+
+
+
+
+
+%--------------------------------------------------------------------------------
+
+%\subsection{NAFEMS-LE1}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - NAFEMS-LE1}
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CSM NAFEMS-LE1 test case directory then execute the
+solid toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_stress_2d}]
+cd Testcases/CSM/NAFEMS-LE1
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_stress_2d \
+       --config-file le1.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./le1.cfg} and model config
+\lstinline{le1.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_stress_2d}]
+feelpp_toolbox_stress_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - NAFEMS-LE1 - .cfg}
+    Config file \lstinline{~/Testcases/CSM/NAFEMS-LE1/le1.cfg}
+\vspace{5mm}
+    \lstinputlisting[language=json,mathescape=false]{codes/csm/nafemsle1/le1.cfg}
+\framebreak
+\end{frame}
+
+
+\begin{frame}[fragile, allowframebreaks]{CSM - NAFEMS-LE1 - .json}
+   Model config file \lstinline{~/Testcases/CSM/NAFEMS-LE1/le1.json}
+    \lstinputlisting[language=json,mathescape=false]{codes/csm/nafemsle1/le1.json}
+\framebreak
+\end{frame}
+
+
+
+
+%--------------------------------------------------------------------------------
+
+%\subsection{NAFEMS-LE10}
+
+\begin{frame}[fragile, allowframebreaks]{CSM - NAFEMS-LE10}
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to CSM NAFEMS-LE10 test case directory then execute the
+solid toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_stress_2d}]
+cd Testcases/CSM/NAFEMS-LE10
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_stress_2d \
+       --config-file le10.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./le10.cfg} and model config
+\lstinline{le10.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_stress_2d}]
+feelpp_toolbox_stress_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, allowframebreaks]{CSM - NAFEMS-LE10 - .cfg}
+Config file \lstinline{~/Testcases/CSM/NAFEMS-LE10/le10.cfg}
+\lstinputlisting[language=json,mathescape=false]{codes/csm/nafemsle10/le10.cfg}
+\framebreak
+\end{frame}
+
+
+\begin{frame}[fragile, allowframebreaks]{CSM - NAFEMS-LE10 - .json}
+Model config file \lstinline{~/Testcases/CSM/NAFEMS-LE10/le10.json}
+\lstinputlisting[language=json,mathescape=false]{codes/csm/nafemsle10/le10.json}
+\framebreak
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%================================================================================
+\section[FSI]{Fluid Structure Interaction toolbox}
+%================================================================================
+
+
+%\subsection{TurekHron}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - TurekHron}
+
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to FSI TurekHron test case directory then execute the
+FSI toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+cd Testcases/FSI/TurekHron/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_fsi_2d \
+       --config-file fsi3.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./fsi3.cfg} and model config
+\lstinline{fsi3_solid.json} and \lstinline{fsi3_fluid.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+feelpp_toolbox_fsi_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - TurekHron - fsi3.cfg}
+
+Config file \lstinline{~/Testcases/FSI/TurekHron/fsi3.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/fsi/turekhron/fsi3.cfg}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - TurekHron - .json}
+Model config file \lstinline{~/Testcases/FSI/TurekHron/fsi3_solid.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/fsi/turekhron/fsi3_solid.json}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - TurekHron - .json}
+Model config file \lstinline{~/Testcases/FSI/TurekHron/fsi3_fluid.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/fsi/turekhron/fsi3_fluid.json}
+
+\end{frame}
+
+
+
+
+%--------------------------------------------------------------------------------
+
+%\subsection{Wavepressure 2D}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 2D}
+
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to FSI WavePressure test case directory then execute the
+FSI toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+cd Testcases/FSI/wavepressure2d/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_fsi_2d \
+       --config-file fsi3.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./wavepressure2d.cfg} and model config
+\lstinline{wavepressure2d_solid.json} and \lstinline{wavepressure2d_fluid.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+feelpp_toolbox_fsi_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 2D - .cfg}
+
+Config file \lstinline{~/Testcases/FSI/wavepressure2d/wavepressure2d.cfg}
+
+\vspace{5mm}
+Config file \lstinline{~/Testcases/FSI/wavepressure2d/wavepressure2d.json}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/fsi/wavepressure2d/wavepressure2d.cfg}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 2D - .json}
+Model config file \lstinline{~/Testcases/FSI/wavepressure2d/wavepressure2d_solid.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]
+{codes/fsi/wavepressure2d/wavepressure2d_solid.json}
+\end{frame}
+
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 2D - .json}
+Model config file \lstinline{~/Testcases/FSI/wavepressure2d/wavepressure2d_fluid.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]
+{codes/fsi/wavepressure2d/wavepressure2d_fluid.json}
+\end{frame}
+
+
+
+
+
+%--------------------------------------------------------------------------------
+
+
+%\subsection{Wavepressure 3D}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 3D}
+
+Run  interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to FSI WavePressure test case directory then execute the
+FSI toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+cd Testcases/FSI/wavepressure3d/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_fsi_2d \
+       --config-file fsi3.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./wavepressure3d.cfg} and model config
+\lstinline{wavepressure3d_solid.json} and \lstinline{wavepressure3d_fluid.json}
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+feelpp_toolbox_fsi_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 3D - .cfg}
+
+Config file \lstinline{~/Testcases/FSI/wavepressure3d/wavepressure3d.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/fsi/wavepressure3d/wavepressure3d.cfg}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 3D - .json}
+Model config file \lstinline{~/Testcases/FSI/wavepressure3d/wavepressure3d_solid.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/fsi/wavepressure3d/wavepressure3d_solid.json}
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{FSI - WavePressure 3D - .json}
+Model config file \lstinline{~/Testcases/FSI/wavepressure3d/wavepressure3d_fluid.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/fsi/wavepressure3d/wavepressure3d_fluid.json}
+\end{frame}
+
+
+
+%================================================================================
+\section[HeatTransfer]{Heat Transfer toolbox}
+%================================================================================
+
+%\begin{frame}[fragile]{Building}
+%\end{frame}
+
+
+
+%\subsection{Thermo 2D}
+
+
+\begin{frame}[fragile,allowframebreaks]{HeatTransfer - Thermo 2D}
+
+Run an interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to HeatTransfer Thermo 2d test case directory then execute the
+HeatTransfer toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_thermodyn_2d}]
+cd Testcases/HeatTransfer/thermo2d/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_thermodyn_2d \
+       --config-file fsi3.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./thermo2d.cfg} and model config
+\lstinline{thermo2d.json}.
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_fsi_2d}]
+feelpp_toolbox_thermodyn_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{HeatTransfer - Thermo 2D - .cfg}
+
+Config file \lstinline{~/Testcases/HeatTransfer/thermo2d/thermo2d.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/heattransfer/thermo2d/thermo2d.cfg}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{HeatTransfer - Thermo 2D - .json}
+Model config file \lstinline{~/Testcases/HeatTransfer/thermo2d/thermo2d.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/heattransfer/thermo2d/thermo2d.json}
+\end{frame}
+
+
+
+
+%================================================================================
+\section[ThermoElectric]{Thermo Electric toolbox}
+%================================================================================
+
+%\subsection{Test 2D}
+
+\begin{frame}[fragile,allowframebreaks]{ThermoElectric - Test 2D}
+
+Run an interactive feel++ docker container
+
+\begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
+docker run -it -v $HOME/feel:/feel \
+       feelpp/feelpp/feelpp-toolboxes 
+\end{lstlisting}
+
+You are now in the \textsc{feel++} toolbox docker container.
+
+Place yourself to ThermoElectric test 2d test case directory then execute the
+ThermoElectric toolbox with given configs
+
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_thermoelectric_2d}]
+cd Testcases/ThermoElectric/test/
+
+mpirun -np 4 /usr/local/bin/feelpp_toolbox_thermoelectric_2d \
+       --config-file test-thermoelectric.cfg
+\end{lstlisting}
+
+Take a look to the toolbox config \lstinline{./test-thermoelectric.cfg} and model config
+\lstinline{test-thermoelectric.json}.
+
+For more possible options
+\begin{lstlisting}[language=Bash,mathescape=false, emph={feelpp_toolbox_thermoelectric_2d}]
+feelpp_toolbox_thermoelectric_2d --help
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{ThermoElectric - Test 2D - .cfg}
+
+Config file \lstinline{~/Testcases/ThermoElectric/test/test-thermoelectric.cfg}
+
+\vspace{5mm}
+% 42 code lines
+\lstinputlisting[language=Bash,mathescape=false]{codes/thermoelectric/test/test-thermoelectric.cfg}
+
+\end{frame}
+
+
+\begin{frame}[fragile,allowframebreaks]{ThermoElectric - Test 2D - .json}
+Model config file \lstinline{~/Testcases/ThermoElectric/test/test-thermoelectric.json}
+\vspace{5mm}
+% 75 code lines
+\lstinputlisting[language=json,mathescape=false]{codes/thermoelectric/test/test-thermoelectric.json}
 \end{frame}
 
 
