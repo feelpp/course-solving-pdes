@@ -3,7 +3,7 @@
 \usepackage{fontawesome}
 \usepackage{setspace}
 \usepackage{graphicx}
-
+\usepackage[scriptsize,rm]{subfigure}
 %\usepackage{media9}
 %\usepackage{movie15}
 \usepackage{amsmath,amssymb,calc}
@@ -28,15 +28,19 @@
 \newminted{cpp}{%fontsize=\scriptsize,
   linenos,
   numbersep=8pt,
-  gobble=4,
+  gobble=0,
   frame=lines,
+  autogobble=true,
+  fontsize=\footnotesize,
   bgcolor=lbcolor,
   framesep=3mm}
 
 \newminted{bash}{%fontsize=\scriptsize,
   linenos,
+  fontsize=\footnotesize,
+  autogobble=true,
   numbersep=8pt,
-  gobble=4,
+  gobble=0,
   frame=lines,
   bgcolor=lbcolor,
   framesep=3mm}
@@ -77,7 +81,8 @@
   emph={[5]size\_type,uint16\_type},emphstyle={[5]\color{red}\bfseries},
   emph={[6]GeoTool,vf,cl},emphstyle={[6]\color{cyan}\bfseries}
 }
-
+\lstset{rangeprefix=//! ,% curly left brace plus space
+  rangesuffix= }}% space plus curly right brace
 \lstset{numberstyle=\tiny}
 \lstset{backgroundcolor=\color{white},rulecolor=}
 \definecolor{lightgrey}{RGB}{160,160,160}

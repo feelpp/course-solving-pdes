@@ -4,29 +4,29 @@
 \begin{frame}{Preconditioning}
   A preconditioned iterative solver solves the system
   \begin{equation}
-    M^{-1} A x = M^{-1}b .
+    P^{-1} A x = P^{-1}b .
   \end{equation}
 
-The matrix $M$ is called the preconditioner.
+The matrix $P$ is  the preconditioner.
 The preconditioner should satisfy certain requirements:
 \begin{itemize}
 \item Convergence should be much faster for the preconditioned
 system than for the original system. Normally this means
-that $M$ is constructed as an easily invertible approximation
-to $A$. Note that if $M = A$ any iterative method converges in
+that $P$ is constructed as an easily invertible approximation
+to $A$. Note that if $P = A$ any iterative method converges in
 one iteration.
-\item Operations with $M^{-1}$ should be cheap to perform, at least
+\item Operations with $P^{-1}$ should be cheap to perform, at least
   cheaper than $A^{-1}$
 
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Preconditioning}
-  Of course the matrix $M^{-1}A$ is not explicitly formed. The
-multiplication $u = M^{-1}Av$ can simply be carried out by the
-operations
+  The matrix $P^{-1}A$ is not explicitly formed. The
+multiplication $u = P^{-1}Av$ is done as follows
+
 \begin{equation*}
-t = Av; u = M^{-1}t
+t = Av; u = P^{-1}t
 \end{equation*}
 
 \end{frame}
@@ -35,17 +35,17 @@ t = Av; u = M^{-1}t
   Preconditioners can be applied in different ways:
   From the left
   \begin{equation*}
-    M^{-1}Ax = M^{-1}b ,
+    P^{-1}Ax = P^{-1}b ,
   \end{equation*}
 
   centrally
   \begin{equation*}
-M = LU; L^{-1}AU^{-1}y = L^{-1}b; x = U^{-1}y ,
+P = LU; L^{-1}AU^{-1}y = L^{-1}b; x = U^{-1}y ,
   \end{equation*}
 
   or from the right
   \begin{equation*}
-    AM^{-1}y = b; x = M^{-1}y .
+    AP^{-1}y = b; x = P^{-1}y .
   \end{equation*}
 
 \end{frame}
@@ -62,52 +62,83 @@ required to compute $x$;
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Why preconditioning?}
-  \begin{figure}[h]
-    \centering
-  \includegraphics[width=.8\linewidth]{figures/iter1.png}
-    \caption{Iteration 1}
-    \label{fig:1}
-  \end{figure}
+% \begin{frame}{Why preconditioning?}
+%   \begin{figure}[h]
+%     \centering
+%   \includegraphics[width=.8\linewidth]{figures/iter1.png}
+%     \caption{Iteration 1}
+%     \label{fig:1}
+%   \end{figure}
 
+% \end{frame}
+
+% \begin{frame}{Why preconditioning?}
+%   \begin{figure}[h]
+%     \centering
+%   \includegraphics[width=.8\linewidth]{figures/iter2.png}
+%     \caption{Iteration 7}
+%     \label{fig:2}
+%   \end{figure}
+
+% \end{frame}
+% \begin{frame}{Why preconditioning?}
+%   \begin{figure}[h]
+%     \centering
+%   \includegraphics[width=.8\linewidth]{figures/iter3.png}
+%     \caption{Iteration 21}
+%     \label{fig:3}
+%   \end{figure}
+
+% \end{frame}
+
+
+% \begin{frame}{Why preconditioning?}
+%   From the previous pictures it is clear that we need
+% $O(1/h) = O(\sqrt{n})$ iterations to move information from one end to
+% the other end of the grid.
+
+% So at best it takes $O(n^{3/2})$ operations to compute the solution
+% with an iterative method.
+
+% In order to improve this we need a preconditioner that enables
+% fast propagation of information through the mesh.
+% \end{frame}
+
+\subsection{PETSc}
+
+\begin{frame}[fragile]{PETSc}
+  Feel++ uses PETSc as the main backend for algebraic solves
+  \begin{itemize}
+  \item We call the algebraic interface a \texttt{Backend}
+  \item Iterative solvers and preconditioners can be set in
+    \texttt{.cfg} file using \texttt{ksp-type} and \texttt{pc-type}
+    respectively
+  \item idem in command line
+  \item the option naming reflects the PETSc option naming
+  \item use \texttt{ksp-monitor} to inspect solver iterations
+  \item use \texttt{ksp-view} to inspect solver configuration
+  \end{itemize}
+  \begin{bashcode}
+    feelpp_qs_laplacian_2d --help-lib | grep ksp
+    feelpp_qs_laplacian_2d --help | grep ksp
+  \end{bashcode}
 \end{frame}
 
-\begin{frame}{Why preconditioning?}
-  \begin{figure}[h]
-    \centering
-  \includegraphics[width=.8\linewidth]{figures/iter2.png}
-    \caption{Iteration 7}
-    \label{fig:2}
-  \end{figure}
-
-\end{frame}
-\begin{frame}{Why preconditioning?}
-  \begin{figure}[h]
-    \centering
-  \includegraphics[width=.8\linewidth]{figures/iter3.png}
-    \caption{Iteration 21}
-    \label{fig:3}
-  \end{figure}
-
-\end{frame}
-
-
-\begin{frame}{Why preconditioning?}
-  From the previous pictures it is clear that we need
-$O(1/h) = O(\sqrt{n})$ iterations to move information from one end to
-the other end of the grid.
-
-So at best it takes $O(n^{3/2})$ operations to compute the solution
-with an iterative method.
-
-In order to improve this we need a preconditioner that enables
-fast propagation of information through the mesh.
-\end{frame}
 \subsection{Basic Preconditioners}
-\begin{frame}{Diagonal scaling}
+
+\begin{frame}[fragile]{Direct solvers}
+  use a Direct solver interfaced by PETSc such as MUMPS or Umfpack
+  \begin{bashcode}
+    ksp-type=preonly # no iterative solve
+    pc-type=lu
+    pc-factor-mat-solver-package-type=mumps # or umfpack in sequential
+  \end{bashcode}
+\end{frame}
+
+\begin{frame}[fragile]{Diagonal scaling}
   Diagonal scaling or Jacobi preconditioning uses
   \begin{equation*}
-    M = \textrm{diag}(A)
+    P = \textrm{diag}(A)
   \end{equation*}
 
 as preconditioner. Clearly, this preconditioner does not enable
@@ -115,12 +146,17 @@ fast propagation through a grid. On the other hand, operations
 with $\textrm{diag}(A)$ are very easy to perform and diagonal scaling can
 be useful as a first step, in combination with other techniques.
 
+\begin{bashcode}
+  # diagonal preconditioner
+  pc-type=jacobi
+\end{bashcode}
+
 \end{frame}
 
-\begin{frame}{Gauss-Seidel, SOR, SSOR}
+\begin{frame}[fragile]{Gauss-Seidel, SOR, SSOR}
   The Gauss-Seidel preconditioner is defined by
   \begin{equation*}
-    M = L + D
+    P = L + D
   \end{equation*}
 
 in which $L$ is the strictly lower-triangular part of $A$ and
@@ -131,14 +167,19 @@ For symmetric problems it is wise to take a symmetric
 preconditioner. A symmetric variant of Gauss-Seidel is defined
 by
 \begin{equation*}
-M = (L + D)D^{-1}(L + D)^T
+P = (L + D)D^{-1}(L + D)^T
 \end{equation*}
 
 By introducing a relaxation parameter we get the so called
 SSOR-preconditioner.
+
+\begin{bashcode}
+  # GS preconditioner
+  pc-type=sor
+\end{bashcode}
 \end{frame}
 
-\begin{frame}{ILU Preconditioners}
+\begin{frame}[fragile]{ILU Preconditioners}
   ILU-preconditioners are the most popular \emph{black box}
 preconditioners. They are constructed by making a standard
 LU-decomposition
@@ -154,9 +195,16 @@ criteria:
 corresponds to a nonzero entry in $A$;
 \item Size: small entries in the decomposition are dropped.
 \end{itemize}
+
+\begin{bashcode}
+  # ilu preconditioner
+  pc-type=ilu
+\end{bashcode}
+
+
 \end{frame}
 
-\begin{frame}{ILU Preconditioners}
+\begin{frame}[fragile]{ILU Preconditioners}
   The number of nonzero entries that is maintained in the
 $LU$-factors is normally of the order of the number of nonzeros in
 $A$.
@@ -167,6 +215,12 @@ approximately as costly as multiplications with $A$.
 For A Symmetric Positive Definite a special variant of ILU exists,
 called Incomplete Choleski. This preconditioner is based on the
 Choleski decomposition $A = CC^T$ .
+
+\begin{bashcode}
+  # icc preconditioner
+  pc-type=icc
+\end{bashcode}
+
 \end{frame}
 
 \begin{frame}{Basic preconditioners}
@@ -180,48 +234,47 @@ will develop the idea that is at the basis of one of the fastest
 techniques: multigrid.
 \end{frame}
 
-\begin{frame}{Smoothing}
-  \begin{figure}[h]
-    \centering
-    \includegraphics[width=.8\linewidth]{figures/jacobi_errini.png}
-    \caption{Random initial error}
-    \label{fig:2}
-  \end{figure}
-\end{frame}
+% \begin{frame}{Smoothing}
+%   \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=.8\linewidth]{figures/jacobi_errini.png}
+%     \caption{Random initial error}
+%     \label{fig:2}
+%   \end{figure}
+% \end{frame}
 
-\begin{frame}{Smoothing}
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=.8\linewidth]{figures/jacobi_err1.png}
-    \caption{Error after 1 Jacobi ieration}
-    \label{fig:3}
-  \end{figure}
-\end{frame}
+% \begin{frame}{Smoothing}
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=.8\linewidth]{figures/jacobi_err1.png}
+%     \caption{Error after 1 Jacobi ieration}
+%     \label{fig:3}
+%   \end{figure}
+% \end{frame}
 
-\begin{frame}{Smoothing}
-  \begin{figure}[h]
-    \centering
-    \includegraphics[width=.8\linewidth]{figures/jacobi_err2.png}
-    \caption{Error after 2 Jacobi ieration}
-    \label{fig:4}
-  \end{figure}
-\end{frame}
+% \begin{frame}{Smoothing}
+%   \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=.8\linewidth]{figures/jacobi_err2.png}
+%     \caption{Error after 2 Jacobi ieration}
+%     \label{fig:4}
+%   \end{figure}
+% \end{frame}
 
-\begin{frame}{Smoothing}
-  \begin{figure}[h]
-    \centering
-    \includegraphics[width=.8\linewidth]{figures/jacobi_err3.png}
-    \caption{Error after 3 Jacobi ieration}
-    \label{fig:5}
-  \end{figure}
-\end{frame}
+% \begin{frame}{Smoothing}
+%   \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=.8\linewidth]{figures/jacobi_err3.png}
+%     \caption{Error after 3 Jacobi ieration}
+%     \label{fig:5}
+%   \end{figure}
+% \end{frame}
 
 \begin{frame}{Complementarity}
   \begin{itemize}
   \item  Error after a few weighted Jacobi iterations has structure,
-this is the same for the other basic iterative methods.
-\item Instead of discarding the method, look to complement its
-failings
+this is the similar for the other  iterative methods.
+\item Instead of discarding the method, try to complement it
 
   \end{itemize}
 How can we best correct errors that are slowly reduced by basic
@@ -272,7 +325,7 @@ from a coarse-grid version of the problem
 \begin{frame}{Two-grid cycle}
   Components
   \begin{itemize}
-  \item Relaxation Relax: $x^{(1)}= x^{(0)}+M^{-1}r^{(0)}$
+  \item Relaxation Relax: $x^{(1)}= x^{(0)}+P^{-1}r^{(0)}$
     \only<2>{\begin{itemize}
     \item Use a smoothing process (such as Jacobi or Gauss-Seidel)
       to eliminate oscillatory errors
@@ -313,40 +366,40 @@ coarse-grid correction
 
 \end{frame}
 
-\begin{frame}
-\includegraphics[width=.8\linewidth]{figures/vcycle.png}
-\end{frame}
+% \begin{frame}
+% \includegraphics[width=.8\linewidth]{figures/vcycle.png}
+% \end{frame}
 
-\begin{frame}{Properties of Effective Cycles}
-  \begin{itemize}
-  \item   Fast convergence
-    \begin{itemize}
-    \item  Effective reduction of all error components
-      \item  On each level, coarse-grid correction must effectively
-reduce exactly those errors that are slow to be reduced
-by relaxation alone
-\item Hierarchy of coarse-grid operators resolves relevant
-physics at each scale
+% \begin{frame}{Properties of Effective Cycles}
+%   \begin{itemize}
+%   \item   Fast convergence
+%     \begin{itemize}
+%     \item  Effective reduction of all error components
+%       \item  On each level, coarse-grid correction must effectively
+% reduce exactly those errors that are slow to be reduced
+% by relaxation alone
+% \item Hierarchy of coarse-grid operators resolves relevant
+% physics at each scale
 
-    \end{itemize}
-  \item Low iteration cost
-    \begin{itemize}
-    \item \item Simple relaxation scheme (cheap computation of $M^{-1}r$
-on all levels)
-\item Sparse coarse-grid operators
-\item Sparse interpolation/restriction operations
+%     \end{itemize}
+%   \item Low iteration cost
+%     \begin{itemize}
+%     \item \item Simple relaxation scheme (cheap computation of $P^{-1}r$
+% on all levels)
+% \item Sparse coarse-grid operators
+% \item Sparse interpolation/restriction operations
 
-    \end{itemize}
+%     \end{itemize}
 
-  \end{itemize}
-\end{frame}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}{Choosing coarse grids}
   \begin{itemize}
   \item   No best strategy to choose coarse grids
   \item Operator dependent, but also machine dependent
 
-    \includegraphics[width=.7\linewidth]{figures/coarsergrid.png}
+%    \includegraphics[width=.7\linewidth]{figures/coarsergrid.png}
 
 \item For structured meshes, often use uniform de-refinement
 approach
@@ -371,7 +424,7 @@ method
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Some remarks on multigrid}
+\begin{frame}[fragile]{Remarks on multigrid}
   Multigrid works well if the problem
   \begin{itemize}
   \item  is grid-based. However, matrix-based multigrid methods
@@ -385,10 +438,16 @@ problems the number of operations is $O(n).$
 
 Multigrid can be used as a separate solver, but is often used as
 a preconditioner for a Krylov-type method.
+
+\begin{bashcode}
+  pc-type=gamg # can use of hypre if available
+  pc-mg-levels=4 # number of levels
+  gamg-nsmooths=1 # number of smoothign steps
+\end{bashcode}
 \end{frame}
 
 \subsection{Domain decomposition preconditioners}
-\begin{frame}{Domain decomposition preconditioners}
+\begin{frame}[fragile]{Domain decomposition preconditioners}
   A standard way to parallelise a grid-based computation is to split
 the domain into $p$ subdomains, and to map each subdomain on a
 processor.
@@ -398,13 +457,11 @@ independently and to iterate to correct for the error.
 This idea has given rise to the family of domain decomposition
 preconditioners.
 
-The theory for domain decomposition preconditioners is vast,
-here we only discuss some important ideas.
+The theory for domain decomposition preconditioners is vast.
+
 \end{frame}
 
-\begin{frame}{Domain Decomposition}
-  \includegraphics[width=.8\linewidth]{ddm}
-\end{frame}
+
 
 \begin{frame}{Domain Decomposition}
   The domain decomposition decomposes the system $Ax = b$ into
@@ -436,7 +493,7 @@ It is a natural idea to solve a linear system $Ax = b$ by solving the
 subdomain problems independently and to iterate to correct for
 the error.
 
-This idea has given rise to the family of domain decomposition
+It has given rise to the domain decomposition
 preconditioners.
 
 The theory for domain decomposition preconditioners is vast,
@@ -444,10 +501,10 @@ here we only discuss some important ideas.
 
 \end{frame}
 
-\begin{frame}{Block Jacobi Preconditioners}
+\begin{frame}[fragile]{Block Jacobi Preconditioners}
   A simple domain decomposition preconditioner is defined by
   \begin{equation*}
-    M=
+    P=
     \begin{pmatrix}
       A_{11}&0\\
       0 & A_{22}
@@ -455,7 +512,7 @@ here we only discuss some important ideas.
   \end{equation*}
   or, in general by
   \begin{equation*}
-    M=
+    P=
     \begin{pmatrix}
       A_{11}&&\\
       &\ddots&\\
@@ -463,33 +520,41 @@ here we only discuss some important ideas.
     \end{pmatrix}
 
   \end{equation*}
-The subdomain systems can be solved in parallel.
+  The subdomain systems can be solved in parallel.
+
+  \begin{bashcode}
+    # global preconditioner block jacobi
+    pc-type=bjacobi
+    # preconditioner in the subdomains
+    sub-pc-type=lu
+    sub-pc-factor-mat-solver-package-type=mumps
+  \end{bashcode}
 \end{frame}
 
-\begin{frame}{Solution of the Subdomain Problems}
+% \begin{frame}{Solution of the Subdomain Problems}
 
-  There are several ways to solve the subdomain problems:
-  \begin{itemize}
-  \item  Exact solves. This is in general (too) expensive.
-\item Inexact solves using an incomplete decomposition
-(block-ILU).
-\item Inexact solves using an iterative method to solve the
-subproblems. Since in this case the preconditioner is
-variable, the outer iteration should be flexible, for example
-GCR.
-  \end{itemize}
-\end{frame}
+%   There are several ways to solve the subdomain problems:
+%   \begin{itemize}
+%   \item  Exact solves. This is in general (too) expensive.
+% \item Inexact solves using an incomplete decomposition
+% (block-ILU).
+% \item Inexact solves using an iterative method to solve the
+% subproblems. Since in this case the preconditioner is
+% variable, the outer iteration should be flexible, for example
+% GCR, FGMRES.
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}{On the Scalability of Block-Jacobi}
-  Without special techniques, the number of iterations increases
-  with the number of subdomains. The algorithm is not scalable.
+% \begin{frame}{On the Scalability of Block-Jacobi}
+%   Without special techniques, the number of iterations increases
+%   with the number of subdomains. The algorithm is not scalable.
 
-To overcome this problem, techniques can be applied to enable
-the exchange of information between subdomains.
-\end{frame}
+% To overcome this problem, techniques can be applied to enable
+% the exchange of information between subdomains.
+% \end{frame}
 
-\begin{frame}{Improving the Scalabiliy}
-  Two popular techniques that improve the flow of information are:
+\begin{frame}[fragile]{Improving the Scalability}
+  Two popular techniques to improve the scalability
   \begin{itemize}
   \item Use an overlap between subdomains. Of course one has to
 ensure that the value of unknowns in gridpoints that belong
@@ -502,6 +567,13 @@ be represented on a single subdomain.
 
   \end{itemize}
 
+\begin{bashcode}
+  # Additive Schwarz with coarse preconditioner
+  pc-type=gasm # or asm
+  pc-gasm-overlap=1 # more means more communications
+  # direct solves in the subdomaine
+  sub-pc-type=lu
+\end{bashcode}
 
 \end{frame}
 \subsection{KKT or saddle point systems}
@@ -512,20 +584,19 @@ following block structure
 \begin{equation*}
   A=
   \begin{pmatrix}
-    A & B^T\\
+    F & B^T\\
     B & -C
   \end{pmatrix}
 
 \end{equation*}
 
 with $F$ and $C$ symmetric pos. def matrices.
-Systems with such a matrix arise in many other applications, for
-example in CFD (Stokes problem) and in structural engineering.
+
+This frequent in many applications e.g CFD or CSM
 \end{frame}
 
 \begin{frame}{Preconditioning a KKT-system}
-  Many preconditonres have been developed that make use of the
-  fact that of the system matrix
+  These systems
   \begin{equation*}
     A=
     \begin{pmatrix}
@@ -534,7 +605,7 @@ example in CFD (Stokes problem) and in structural engineering.
     \end{pmatrix}
 
   \end{equation*}
-  a block LU decomposition can be made:
+  can be block LU decomposed like this
   \begin{equation*}
     \begin{pmatrix}
 F & B^T\\
@@ -546,10 +617,10 @@ BF^{-1} & I\\
 \end{pmatrix}
 \begin{pmatrix}
 F & B^T\\
-O & -M_S
+O & -S
 \end{pmatrix}
   \end{equation*}
-Here $M_S = BF^{-1}B^T + C$ is the Schur complement.
+Here $S = BF^{-1}B^T + C$ is the Schur complement.
 \end{frame}
 
 \begin{frame}{Preconditioning a KKT-system}
@@ -558,10 +629,10 @@ Here $M_S = BF^{-1}B^T + C$ is the Schur complement.
     P =
     \begin{pmatrix}
 F & B^T\\
-O &-M_S
+O &-S
     \end{pmatrix}
   \end{equation*}
-  as (right) preconditioner:
+  as a right preconditioner:
   \begin{equation*}
     AP^{-1} =
     \begin{pmatrix}
@@ -572,7 +643,7 @@ BF^{-1} & I
   has only eigenvalue 1: GMRES ready in 2 iterations. \textbf{BUT}
   \begin{itemize}
   \item  Preconditioner is nonsymmetric
-\item Schur complement is too expensive to compute and has to
+\item Be careful Schur complement is too expensive to compute and has to
 be approximated
 
   \end{itemize}
@@ -584,69 +655,30 @@ be approximated
     P=
     \begin{pmatrix}
 F & O^T\\
-O & M_S
+O & S
     \end{pmatrix}
   \end{equation*}
-Can be used with \textsc{MINRES} (short recurrences)
-Preconditioned matrix has three distinct eigenvalues!
+  Can be used with \textsc{MINRES}.
+
+  Preconditioned matrix has three
+  distinct eigenvalues.
 
 \textsc{MINRES} needs three iterations.
 
-The main question is again how to make a cheap approximation
-to the Schur complement.
+As before, how to build a cheap/affordable approximation
+of the Schur complement.
 \end{frame}
 
-\begin{frame}{Concluding remarks}
-  Preconditioners are the key to a successful iterative method.
 
-
-Today we saw some of the most important preconditioners. The
-best preconditioner, however, depends completely on the
-problem.
+\begin{frame}[fragile,allowframebreaks]{Block preconditioners: PCD}
+  We present here an configuration file for an implementation of PCD
+  \inputminted{bash}{pcd_lu_lu.cfg}
 \end{frame}
 
-%\lecture[2]{Domain Decomposition methods}
-
-\section{Domain Decomposition Methods}
-
-\begin{frame}{Table of contents}
-  \setbeamertemplate{section in toc}[sections numbered]
-  \tableofcontents[hideallsubsections]
+\begin{frame}[fragile,allowframebreaks]{Block preconditioner: SIMPLE}
+  We present here an configuration file for an implementation of SIMPLE
+  \inputminted{bash}{simple_lu_lu.cfg}
 \end{frame}
-\subsection{Introduction}
-\begin{frame}{Motivations}
-  \begin{itemize}
-  \item DD can be used in the framework of any discretization method for
-PDEs (FEM, FV, FD, SEM) to make their algebraic solution more
-efficient on parallel computer platforms
-\item DDM allow the reformulation of a boundary-value problem on a
-partition of the computational domain into subdomains
-! very convenient framework for the solution of heterogeneous or
-multiphysics problems, i.e. those that are governed by differential
-equations of different kinds in different subregions of the
-computational domain.
-  \end{itemize}
-\end{frame}
-\begin{frame}
-  \frametitle{Idea}
-  By DDM methods the computational domain # where the bvp is set is
-subdivided into two or more subdomains on which discretized problems of
-smaller dimension are to be solved.
-Parallel solution algorithms may be used.
-There are two ways of subdividing the computational domain:
-\begin{itemize}
-\item with disjoint subdomains
-\item with overlapping subdomains
-\end{itemize}
-\includegraphics[width=.7\linewidth]{figures/ddmidea.png}
-Correspondingly, different DD algorithms will be set up.
-\end{frame}
-
-% \begin{frame}
-%   \frametitle{Examples}
-%   \includegraphics[width=.9\linewidth]{ddm.png}
-% \end{frame}
-
 
 %%% Local Variables:
 %%% mode: latex

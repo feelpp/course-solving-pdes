@@ -6,6 +6,7 @@ auto
 **.toc
 **.out
 **.snm
+**.vrb
 **.fls
 **.fdb_latexmk
 /lectures/lecture-beamer.pdf
@@ -14,3 +15,4 @@ auto
 
 /lectures/lecture.feelpp.handout.pdf
 /lectures/lecture.feelpp.slides.pdf
+/lectures/_minted**

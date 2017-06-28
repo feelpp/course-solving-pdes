@@ -1,6 +1,176 @@
-%================================================================================
+\begin{frame}{Exercising with the Toolboxes}
+  Dropbox Link for the exercises without the solution (but with the
+  geometry or the mesh)
+  {\small\url{https://www.dropbox.com/sh/ce1xlktwe6sptz3/AACi3uzIoiPkfQuP98GM_q0ca?dl=0}}
+\end{frame}
+
+\section{Toolbox  Framework}
+
+\begin{frame}{Model Properties: Why?}
+  We have a nice DSEL that allows to write variational formulations,
+  we have the cfg files as well as Ginac. However everyone comes up
+  with a different solution, we need to have a more unified way to
+  describe our models.
+
+  \centering
+  \vfill\vspace{1em}\usebeamerfont{section title}{\scshape Introduce
+    Model Properties Framework}\vfill
+\end{frame}
+
+\begin{frame}{Model Properties: What?}
+
+What are model properties?
+\begin{itemize}
+\item Parameters: fixed, variables, formulas
+\item Materials
+\item Model variants
+\item Boundary Conditions
+\item Post Processing
+\end{itemize}
+and possibly more ...
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: JSON}
+  From \url{json.org}: ``json is lightweight data-interchange format. It
+  is easy for humans to read and write. It is easy for machines to
+  parse and generate. It is based on a subset of the JavaScript''
+
+  \inputminted{json}{Codes/prudhomme/fud4/turek.feelpp}
+  \begin{itemize}
+  \item Use \mintinline{c++}{boost::property_tree}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Parameters}
+  Parameters allow to define constants, variables and formulas
+  \begin{columns}[c]
+    \column{.5\linewidth}
+    \begin{minted}[fontsize=\scriptsize,autogobble]{json}
+      "Parameters": {
+        "Um":{
+           "type":"variable",
+           "value":0.3,
+           "min":1e-4,
+           "max":10
+         },
+         "H": {
+           "type":"constant",
+           "value":0.41
+         }}
+    \end{minted}
+    \column{.5\linewidth}
+    \begin{itemize}
+    \item can be used in boundary conditions, material properties or
+      in formulas
+    \item we should be able to define different kind of parameters and
+      customize them (e.g. random variables...)
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Materials}
+  Materials allow to define area with specific properties
+  \begin{columns}[c]
+    \column{.5\linewidth}
+    \begin{minted}{json}
+  "Materials":{
+    "fluid":{
+      // density
+      "rho": "1",
+      // dynamic_viscosity
+      "mu": "0.001"
+    }},
+\end{minted}
+    \column{.5\linewidth}
+    \begin{itemize}
+    \item Currently support coefficients required by fluid and thermal
+      flows with default values
+    \item the name of the material is associated directly to a
+      physical region in Gmsh
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Boundary Conditions}
+  See \texttt{feel/feelpde/boundaryconditions.hpp}
+\begin{columns}[c]
+    \column{.5\linewidth}
+  \begin{minted}[autogobble,fontsize=\scriptsize]{c++}
+    "BoundaryConditions":{
+      "velocity": {
+        "Dirichlet": {
+          "inflow": {
+            "expr":"{4*Um*y*( H-y )/H^2,0}:y:Um:H"
+          },
+          "wall": {
+            "expr":"{0,0}"
+          },
+          "cylinder":{
+            "expr":"{0,0}"
+          } },
+        "Neumann": {
+          "outlet": {
+            "expr":"{0,0,0,0}"
+          }
+        }}}, // BoundaryConditions
+  \end{minted}
+\column{.5\linewidth}
+    \begin{itemize}
+    \item Support 1 or two expressions (Dirichlet, Neumann, Robin)
+    \item Support create of scalar, vector or matrix fields
+      \begin{minted}[autogobble,fontsize=\scriptsize]{c++}
+        // retrieve a list of all vector fields expressions
+        //associated to velocity and Dirichlet conditions
+        dirichlet_cond = bc.getVectorFields<dim>
+                ( "velocity", "Dirichlet" );
+
+        // retrieve a list of all matrix fields expressions
+        // associated to velocity and neumann conditions
+        neumann_cond = bc.getMatrixFields<dim>
+                ( "velocity", "Neumann" );
+      \end{minted}
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model Properties: Post Process}
+  Define outputs for the model to be computed
+\begin{columns}[c]
+    \column{.5\linewidth}
+  \begin{minted}[autogobble,fontsize=\scriptsize]{c++}
+    "PostProcess":
+    {
+      "Force":["cylinder"],
+      "PressureDifference":
+      {
+        "x1":"{0.15,0.2}",
+        "x2":"{0.25,0.2}"
+      }}
+  \end{minted}
+\column{.5\linewidth}
+It is up to the model to decide the type of postprocessing it supports
+\begin{itemize}
+\item Compute drag and lift (Force applied to the structure)
+\item Compute fields at points
+\item Compute flow rates
+\item ...
+\end{itemize}
+  \end{columns}
+\end{frame}
+
+% ================================================================================
 \section[CFD]{CFD Toolbox}
 %================================================================================
+
+\begin{frame}[standout]{CFD Toolbox}
+  \url{https://book.feelpp.org/content/en/03-modeling/Fluid/}
+\end{frame}
 
 %\subsection{TurekHron 1}
 
@@ -10,7 +180,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -119,7 +289,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -184,6 +354,10 @@ You can test also the 3d case.
 \section[CSM]{Computation Solid Mechanics toolbox}
 %================================================================================
 
+\begin{frame}[standout]{CSM Toolbox}
+  \url{https://book.feelpp.org/content/en/03-modeling/Solid/}
+\end{frame}
+
 %\subsection{TurekHron}
 
 \begin{frame}[fragile,allowframebreaks]{CSM - TurekHron}
@@ -192,7 +366,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -253,7 +427,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -300,7 +474,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -358,7 +532,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -409,7 +583,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -470,6 +644,9 @@ Model config file \lstinline{~/Testcases/CSM/NAFEMS-LE10/le10.json}
 \section[FSI]{Fluid Structure Interaction toolbox}
 %================================================================================
 
+\begin{frame}[standout]{FSIB Toolbox}
+  \url{https://book.feelpp.org/content/en/03-modeling/FSI/}
+\end{frame}
 
 %\subsection{TurekHron}
 
@@ -480,7 +657,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -549,7 +726,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -621,7 +798,7 @@ Run  interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -679,6 +856,10 @@ Model config file \lstinline{~/Testcases/FSI/wavepressure3d/wavepressure3d_fluid
 \section[HeatTransfer]{Heat Transfer toolbox}
 %================================================================================
 
+\begin{frame}[standout]{Heat Transfer Toolbox}
+  \url{https://book.feelpp.org/content/en/04-learning/HeatTransfer/}
+\end{frame}
+
 %\begin{frame}[fragile]{Building}
 %\end{frame}
 
@@ -693,7 +874,7 @@ Run an interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.
@@ -744,6 +925,10 @@ Model config file \lstinline{~/Testcases/HeatTransfer/thermo2d/thermo2d.json}
 \section[ThermoElectric]{Thermo Electric toolbox}
 %================================================================================
 
+\begin{frame}[standout]{Thermoelectric Toolbox}
+  \url{https://book.feelpp.org/content/en/03-modeling/ThermoElectric/}
+\end{frame}
+
 %\subsection{Test 2D}
 
 \begin{frame}[fragile,allowframebreaks]{ThermoElectric - Test 2D}
@@ -752,7 +937,7 @@ Run an interactive feel++ docker container
 
 \begin{lstlisting}[language=Bash,mathescape=false,emph={docker}]
 docker run -it -v $HOME/feel:/feel \
-       feelpp/feelpp/feelpp-toolboxes 
+       feelpp/feelpp/feelpp-toolboxes
 \end{lstlisting}
 
 You are now in the \textsc{feel++} toolbox docker container.

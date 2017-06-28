@@ -97,7 +97,7 @@
 \begin{frame}{\feel}
   \begin{columns}[c]
     \column{.45\linewidth}
-    \scalebox{.7}{
+    \scalebox{.5}{
     \tikzstyle{root concept}+=[concept color=white!80]
     \tikzstyle{level 1 concept}+=[concept color=ljk!80, sibling angle=60,text=black]
     \tikzstyle{every annotation}=[fill=black!50,opacity=0.5,text=white,scale=.7]
@@ -127,7 +127,7 @@
    \end{tikzpicture}
    }
     \column{.45\linewidth}
-    \scalebox{.7}{
+    \scalebox{.4}{
 \tikzstyle{root concept}+=[concept color=white!80]
 \tikzstyle{level 1 concept}+=[concept color=ljk!80, sibling angle=90]
 \tikzstyle{every annotation}=[fill=black!50,opacity=0.5,text=black]
@@ -249,25 +249,13 @@
 \begin{frame}{Projects with Feel++}
   \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/vivabrain.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/eye2brain.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/blood-rheology.png}
-    \end{subfigure}\\
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/hemotumpp.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/optical-tomography.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/hifimagnet.png}
-    \end{subfigure}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/vivabrain.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/eye2brain.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/blood-rheology.png}}\\
 
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/hemotumpp.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/optical-tomography.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/hifimagnet.png}}
   \end{figure}
 
 \end{frame}
@@ -276,24 +264,13 @@
 \begin{frame}{Projects with Feel++}
   \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/chorus.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/holo3.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/mso4sc.png}
-    \end{subfigure}\\
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/po.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/bioreactor-sivibirpp.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{.3\linewidth}
-      \includegraphics[width=1.\linewidth]{figures/applications/gazomat.png}
-    \end{subfigure}
+
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/chorus.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/holo3.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/mso4sc.png}}\\
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/po.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/bioreactor-sivibirpp.png}}
+    \subfigure{\includegraphics[width=.3\linewidth]{figures/applications/gazomat.png}}
 
   \end{figure}
 
@@ -321,33 +298,128 @@
 
 \subsection{Docker (recommended)}
 
-\begin{frame}{Docker (recommended)}
-  This is the preferred way for end users
-
+\begin{frame}{Why Docker?}
+  \begin{itemize}
+  \item Supports for all recent plateforms including Windows and Mac
+  \item Ease of construction for various Linux flavors (see \url{http://travis-ci.org/feelpp/feelpp})
+  \item Ease of deployment thanks to \url{http://hub.docker.com/u/feelpp/dashboard/}
+  \end{itemize}
+\end{frame}
+\begin{frame}{Some remarks about Docker}
+  \begin{center}
+  \includegraphics[width=.95\linewidth]{figures/feelpp/VMsvsContainers.png}
+  \end{center}
 
 \end{frame}
+\begin{frame}[fragile,allowframebreaks]{Docker (recommended)}
+  % \includegraphics[width=\linewidth]{figures/feelpp/feelpp-docker-pull.png}
+
+    \begin{tcolorbox}[title=\texttt{feelpp/feelpp-libs},enhanced, watermark
+      graphics=figures/feelpp/download-image-button.jpg, watermark
+      overzoom=1.0, height=5cm,watermark opacity=0.25]
+
+
+      Feel++ Libraries and development environment is available from
+      Docker Hub. It includes a mesh partitioner that generates
+      partitioned mesh that can be read e.g. on a supercomputer in an
+      efficient way.\\[1cm]
+
+      \centerline{\mintinline{bash}{docker pull feelpp/feelpp-libs}}
+
+    \end{tcolorbox}
+    \framebreak
+        \begin{tcolorbox}[title=\texttt{feelpp/feelpp-base},enhanced, watermark
+      graphics=figures/feelpp/download-image-button.jpg, watermark
+      overzoom=1.0, height=5cm,watermark opacity=0.25]
+
+
+      The feelpp-base image contains the \alert{Feel++ libraries and
+      environment} as well as some \alert{basic application} such as solving
+      the Laplacian in 2D or 3D or Stokes in 2D with some testcases.\\[1cm]
+
+
+      \centerline{\mintinline{bash}{docker pull feelpp/feelpp-base}}
+
+    \end{tcolorbox}
+
+    \framebreak
+
+        \begin{tcolorbox}[title=\texttt{feelpp/feelpp-toolboxes},enhanced, watermark
+      graphics=figures/feelpp/download-image-button.jpg, watermark
+      overzoom=1.0, height=5cm,watermark opacity=0.25]
+
+      The feelpp-toolboxes image contains the \alert{Feel++ libraries and
+      environement, the basic applications and the toolboxes} in
+      Computational Fluid Dynamics/CFD, Computational Solid
+      Mechanics/CSM, Fluid Structure Interaction/FSI, Heat Transfer/HT
+      and Thermo-Electric/TE.\\[1cm]
+
+
+      \centerline{\mintinline{bash}{docker pull feelpp/feelpp-toolboxes}}
+
+    \end{tcolorbox}
+
+\end{frame}
+
 
 \subsection{Linux}
 
-\begin{frame}{Ubuntu}
-
-\end{frame}
-
-\begin{frame}{Debian}
-
-\end{frame}
-
-\subsection{MacOS X}
-
-
-\begin{frame}[fragile]{Using Homebrew}
+\begin{frame}[fragile]{Ubuntu 16.10}
   \begin{bashcode}
-    brew tap
+    sudo apt-get install automake autoconf libtool libboost-all-dev
+    bash-completion emacs24 gmsh libgmsh-dev libopenturns-dev
+    libbz2-dev libhdf5-openmpi-dev libeigen3-dev libcgal-dev
+    libopenblas-dev libcln-dev libcppunit-dev libopenmpi-dev
+    libann-dev libglpk-dev libpetsc3.7-dev libslepc3.7-dev
+    liblapack-dev libmpfr-dev paraview python-dev libhwloc-dev
+    libvtk6-dev libpcre3-dev python-h5py python-urllib3 xterm tmux
+    screen python-numpy python-vtk6 python-six python-ply wget bison
+    sudo xauth cmake flex gcc-6 g++-6 clang-3.9 clang++-3.9 git
+    ipython openmpi-bin pkg-config
   \end{bashcode}
 \end{frame}
 
+\begin{frame}[fragile]{Debian 9 and Sid}
+  \begin{bashcode}
+    apt-get -y install
+    autoconf automake bash-completion bison cmake emacs24
+    flex git gmsh ipython libann-dev libboost-all-dev
+    libbz2-dev libcgal-dev libcln-dev libcppunit-dev
+    libeigen3-dev libglpk-dev libgmsh-dev
+    libhdf5-openmpi-dev libhwloc-dev liblapack-dev
+    libmpfr-dev libopenblas-dev libopenmpi-dev
+    libopenturns-dev libpcre3-dev libtool libvtk6-dev
+    openmpi-bin paraview petsc-dev pkg-config python-dev
+    python-h5py python-numpy python-ply python-six
+    python-urllib3 python-vtk6 screen slepc-dev sudo
+    tmux wget xauth xterm zsh
+  \end{bashcode}
+\end{frame}
 
-\subsection{Windows?}
+\subsection{MacOS X and Windows}
+
+
+\begin{frame}[fragile]{Using Homebrew on MacOS X}
+  \begin{bashcode}
+    brew tap homebrew/homebrew-science
+    brew tap feelpp/homebrew-feelpp
+    # install feel++
+    brew install feelpp
+    # or  its dependencies
+    brew install --only-dependencies feelpp
+  \end{bashcode}
+\end{frame}
+
+\begin{frame}{and Windows?}
+
+  \begin{center}
+  There is a good chance that with \alert{Bash for Windows 10}, Feel++ can be
+  compiled right away on Windows (Ubuntu).
+\end{center}
+\end{frame}
+
+
+\input{feelpp.intro.start}
 
 
 %%% Local Variables:
