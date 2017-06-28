@@ -1,0 +1,49 @@
+// -*- mode: javascript -*-
+{
+    "Name": "Fluid Mechanics",
+    "ShortName":"Fluid",
+    "Model":"Stokes",//"Navier-Stokes",
+    "Parameters":
+    {
+        "ubar":"2",
+        "chi":"t<2:t"
+    },
+    "Materials":
+    {
+        "internal_volume":{
+            "name":"Air",
+            "rho":998,//"1.177",
+            "mu":1e-3//"1.85e-5"
+        }
+    },
+    "BoundaryConditions":
+    {
+        "velocity":
+        {
+            "Dirichlet":
+            {
+                "wall":
+                {
+                    "expr":"{0,0,0}"
+                }
+            }
+        },
+        "fluid":
+        {
+            "inlet":
+            {
+                "inlet":
+                {
+                    "expr":"1e-3",
+                    "shape":"parabolic",//constant,parabolic,
+                    "constraint":"flow_rate" //velocity_max,flow_rate
+                }
+            }
+        }
+    },
+    "PostProcess":
+    {
+        "Fields":["velocity","pressure","pid"]
+    }
+
+}

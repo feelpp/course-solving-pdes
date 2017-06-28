@@ -1,0 +1,146 @@
+image:images/media/image1.png[image,width=207,height=227]Ressort
+
+* Modele : élasticité linéaire
+* Materiau : acier
+** marqueur : volumeSpring
+** rho=7850
+** E=210e6
+** nu=0.33
+* Prendre en compte les forces de gravité (0,0,-rho*g)
++
+avec g=9.80665
+
+*_Exercice 1 :_*
+
+But : Calculer le déplacement stationnaire du ressort soumis a un étirement.
+
+* Conditions aux limites :
+** markerBottom : disp=\{0,0,-dispImposed} avec dispImposed=8e-3
+** markerTop : disp=\{0,0,0}
+** le reste est libre de contrainte
+* Post-Processing :
+
+Indications :
+
+* utiliser un algorithme quasi-statique avec un incrément de 1e-3.
++
+Rajouter dans le cfg :
++
+solve-quasi-static=1
++
+[solve-quasi-static]
++
+variable-step=1e-3
++
+variable-symbol=dispImposed
+* sauvegarder la solution finale (nécessaire pour l'exo 2)
++
+save-solution=1
+
+*_Exercice 2 :_*
+
+But : étudier la dynamique du ressort en démarrant de l'étirement réaliser à l'exo 1.
+
+* Conditions aux limites :
+** markerTop : disp=\{0,0,0}
+** le reste est libre de contrainte
+* Schéma en temps :
+** Delta T = 1e-3 s
+** T finale = 0.2 s
+* Post-Processing :
+
+Indications :
+
+* Pour définir le déplacement initial u(t=0) à partir de la solution sauvegardée, il faut rajouter cette option (en modifiant préalablement le directory!) :
+
+solid.time-initial.displacement.files.directory=$repository/toolboxes/solid/spring/exercise1/P1G1/np_4/solution.displacement
+
+- Attention : il faut utiliser le même maillage partitionné qu'à l'exercice précédent.
+
+Pendule 2d/3d
+
+image:images/media/image2.png[image,width=195,height=197]
+
+* Modèle : Hyper-Elasticity
+* Materiau : cuivre
+** marqueur : Solid
+** rho=8920
+** E=128e6
+** nu=0.33
+* Prendre en compte les forces de gravité (avec g=9.80665)
+** 2D : (0,-gravity*8920)
+** 3D : (0,0,-rho*g)
+* Conditions aux limites :
+** déplacement nulle sur le marqueur AxeFixed
+** le reste est libre de contrainte
+* Schéma en temps :
+** Delta T = 0.01 s
+** T finale = 10 s
+
+image:images/media/image3.png[image,width=217,height=194]Cyclone
+
+* Modèle : Stokes
+* Materiau : eau
+** marqueur : internal_volume
+** rho=998 kg/m^3
+** mu=1e-3 Pa . s
+* Conditions aux limites :
+** vitesse nulle sur le marqueur wall
+** profile parabolique sur le marqueur inlet avec une contrainte de débit =1e-3 m^3/s
+** sortie libre sur le marqueur gas_outlet
+
+Thermique du batiment
+
+*_Exercice 1 :_*
+
+image:images/media/image4.png[image,width=231,height=236]
+
+image:images/media/image5.png[image,width=218,height=213]
+
+* Modèle : Equation de la chaleur stationnaire
+* Materiau1 :
+** marqueur : air
+** k11=1
+* Materiau2 :
+** marqueur : internal-walls
++
+k11=0.25
+* Materiau3 :
+** marqueur : internal-doors
+** k11=0.13
+* Conditions aux limites :
+** T=325 K sur le marqueur heater-livingroom
+** T=320 K sur le marqueur heater-kitchen
+** T=315 K sur le marqueur heater-bedroom1
+** T=312 K sur le marqueur heater-bedroom2
+** T=298 K sur le marqueur heater-bathroom
+** Echanges thermiques par convection avec l'exterieur qui est à température Text=275 K (marqueurs exterior-walls et front-door) → C.L de Robin
+*** coefficient de transfert h=0.14501 sur exterior-walls
+*** coefficient de transfert h=0.24702 sur front-door
+* Schéma en temps :
+** Delta T = 20 s
+** T finale = 2000 s
+
+*_Exercice 2 :_*
+
+* Modèle : Navier-Stokes avec convection naturelle
+* image:images/media/image6.png[image,width=284,height=212]Materiau1 : air
+** marqueur : air
+** rho=1
+** mu=2.65e-2
+** k11=0.03
+** Cp=1004
+** beta=0.003660
+* Materiau2 : mur interne
+** marqueur : internal-walls
+** rho=1
+** k11=0.25
+** Cp=1000
+** beta=0
+* Conditions aux limites :
+** vitesse du fluide nulle sur les parois (marqueurs :exterior-walls,internal-surfaces,heater1,heater2)
+** température imposé sur heater1 : T=310 K
+** température imposé sur heater1 : T=300 K
+** sur les paroi exterior-walls, on considère un mur composé de plusieurs materiaux (isolation/platre/beton) et un échange avec l'exterieur qui est à une température de 280 K. Ceci est modélisé par une une condition aux limites de Robin :
+*** "expr1":"1.0/(0.06+0.01/0.5 + 0.3/0.8 + 0.20/0.032 +0.016/0.313 +0.14)",// h coeff
+*** "expr2":"280"// temperature exterior

@@ -1,0 +1,54 @@
+// -*- mode: javascript -*-
+{
+    "Name": "Solid Mechanics ",
+    "ShortName":"Solid",
+    "Model":"Hyper-Elasticity",
+    "Materials":
+    {
+        "Solid":{
+            "name":"cuivre",
+            "E":"128e6",
+            "nu":"0.33",
+            "rho":"8920"
+        }
+    },
+    "Parameters":
+    {
+        "gravity":
+        {
+            "value":"9.80665"
+        }
+    },
+    "BoundaryConditions":
+    {
+        "displacement":
+        {
+            "Dirichlet":
+            {
+                "AxeFixed":
+                {
+                    "expr":"{0,0,0}"
+                }
+            },
+            "Neumann_scalar" :
+            {
+                "SolidBoundary":
+                {
+                    "expr":"0" 
+                }
+            },
+            "VolumicForces":
+            {
+                "":
+                {
+                    "expr":"{0,-gravity*8920,0}:gravity" 
+                }
+            }
+        }
+    },
+    "PostProcess":
+    {
+        "Fields":["displacement","pressure","pid","Von-Mises"]
+    }
+        
+}
