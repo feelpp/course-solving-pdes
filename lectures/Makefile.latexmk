@@ -11,10 +11,10 @@ lecture.feelpp.slides.pdf: lecture.feelpp.tex feelpp.intro.tex feelpp.solver.tex
 lecture.feelpp.handout.pdf:
 
 %.handout.pdf : %.handout.tex %.tex
-	latexmk -f -xelatex -shell-escape -pdf $<
+	latexmk -latexoption="-interaction nonstopmode"  -f -xelatex -shell-escape  -pdf $<
 
 %.slides.pdf : %.slides.tex %.tex
-	latexmk -f -xelatex -shell-escape -pdf $<
+	latexmk -latexoption="-interaction nonstopmode"  -f -xelatex -shell-escape  -pdf $<
 
 clean:
 	rm -f *.aux *.log *.nav *.out *.snm
