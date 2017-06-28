@@ -8,6 +8,8 @@ auto
 **.snm
 **.vrb
 **.fls
+**.odt
+**.docx
 **.fdb_latexmk
 /lectures/lecture-beamer.pdf
 /lectures/lecture-handout.pdf
